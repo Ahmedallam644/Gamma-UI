@@ -1,21 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { useQueries } from "@tanstack/react-query";
-import { getGetProjectQueryKey } from "@workspace/api-client-react";
 import { Layout, StatusBadge } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { getProjectIds, removeProjectId } from "@/lib/local-projects";
-import { useState } from "react";
-import { Folder, ChevronRight, ChevronLeft, Trash2, Plus, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Folder, ChevronRight, ChevronLeft, Plus, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-async function fetchProject(id: string) {
-  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-  const res = await fetch(`${base}/api/projects/${id}`);
-  if (!res.ok) throw new Error("Not found");
-  return res.json();
-}
+import { useAuth } from "@/contexts/auth";
 
 type Project = {
   id: string;
@@ -29,24 +20,37 @@ type Project = {
   createdAt: string;
 };
 
+async function fetchProjectsByStudentId(studentId: string, base: string): Promise<Project[]> {
+  const res = await fetch(`${base}/api/projects?studentId=${encodeURIComponent(studentId)}&limit=100&offset=0`);
+  if (!res.ok) throw new Error("Failed to load");
+  const data = await res.json();
+  return data.projects ?? [];
+}
+
 export default function MyProjectsPage() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
-  const [ids, setIds] = useState<string[]>(() => getProjectIds());
+  const { user } = useAuth();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  const results = useQueries({
-    queries: ids.map((id) => ({
-      queryKey: getGetProjectQueryKey(id),
-      queryFn: () => fetchProject(id),
-      retry: false,
-      staleTime: 30000,
-    })),
-  });
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-  const handleRemove = (id: string) => {
-    removeProjectId(id);
-    setIds((prev) => prev.filter((i) => i !== id));
-  };
+  useEffect(() => {
+    if (!user) return;
+    setLoading(true);
+    setError(false);
+    fetchProjectsByStudentId(user.uid, base)
+      .then((data) => {
+        setProjects(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
+  }, [user, base]);
 
   const statusToPath = (project: Project) => {
     if (project.status === "draft") return `/generate/${project.id}`;
@@ -80,7 +84,15 @@ export default function MyProjectsPage() {
           </Link>
         </div>
 
-        {ids.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center rounded-2xl border border-dashed bg-muted/20">
+            <p className="text-sm text-destructive">{t("errorOccurred")}</p>
+          </div>
+        ) : projects.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -101,57 +113,16 @@ export default function MyProjectsPage() {
         ) : (
           <div className="flex flex-col gap-3">
             <AnimatePresence>
-              {results.map((result, i) => {
-                const id = ids[i];
-
-                if (result.isLoading) {
-                  return (
-                    <motion.div
-                      key={id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-4 rounded-xl border bg-card p-4"
-                    >
-                      <Loader2 className="h-4 w-4 text-muted-foreground animate-spin shrink-0" />
-                      <span className="text-sm text-muted-foreground">{t("projectId")}: {id}</span>
-                    </motion.div>
-                  );
-                }
-
-                if (result.isError || !result.data) {
-                  return (
-                    <motion.div
-                      key={id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="flex items-center justify-between rounded-xl border border-dashed bg-muted/20 px-4 py-3 opacity-60"
-                    >
-                      <span className="text-xs text-muted-foreground font-mono">{id}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                        onClick={() => handleRemove(id)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </motion.div>
-                  );
-                }
-
-                const project = result.data as Project;
+              {projects.map((project, i) => {
                 const continuable = isContinuable(project.status);
-
                 return (
                   <motion.div
-                    key={id}
+                    key={project.id}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ delay: i * 0.04 }}
                     className="rounded-xl border bg-card shadow-xs overflow-hidden"
-                    data-testid={`my-project-${id}`}
                   >
                     <div className="p-4 flex items-start gap-4">
                       <div className="flex-1 min-w-0">
@@ -174,23 +145,12 @@ export default function MyProjectsPage() {
                           </span>
                         </div>
                       </div>
-
                       <div className="flex items-center gap-2 shrink-0">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                          onClick={() => handleRemove(id)}
-                          data-testid={`btn-remove-${id}`}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
                         <Link href={statusToPath(project)}>
                           <Button
                             size="sm"
                             variant={continuable ? "default" : "outline"}
                             className={cn("gap-1.5 text-xs", continuable && "bg-primary")}
-                            data-testid={`btn-open-${id}`}
                           >
                             {continuable ? t("continueProject") : t("viewProject")}
                             {isRTL

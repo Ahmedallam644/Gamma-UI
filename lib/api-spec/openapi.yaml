@@ -36,6 +36,10 @@ paths:
       summary: List all project requests
       parameters:
         - in: query
+          name: studentId
+          schema:
+            type: string
+        - in: query
           name: status
           schema:
             type: string
@@ -363,6 +367,9 @@ components:
           type: string
           nullable: true
         facultyLogoUrl:
+          type: string
+          nullable: true
+        studentId:
           type: string
           nullable: true
       required: [topic, studentNames, supervisorName, department, language, documentType]

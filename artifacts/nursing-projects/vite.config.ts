@@ -28,6 +28,11 @@ if (!basePath) {
 
 export default defineConfig({
   base: basePath,
+  define: {
+    __FIREBASE_API_KEY__: JSON.stringify(process.env.FIREBASE_API_KEY || ""),
+    __FIREBASE_PROJECT_ID__: JSON.stringify(process.env.FIREBASE_PROJECT_ID || ""),
+    __FIREBASE_APP_ID__: JSON.stringify(process.env.FIREBASE_APP_ID || ""),
+  },
   plugins: [
     react(),
     tailwindcss(),

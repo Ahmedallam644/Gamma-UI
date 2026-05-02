@@ -21,6 +21,7 @@ export const listProjectsQueryLimitDefault = 20;
 export const listProjectsQueryOffsetDefault = 0;
 
 export const ListProjectsQueryParams = zod.object({
+  studentId: zod.coerce.string().optional(),
   status: zod
     .enum(["pending_approval", "approved", "rejected", "completed"])
     .optional(),
@@ -79,6 +80,7 @@ export const CreateProjectBody = zod.object({
   templateName: zod.string().nullish(),
   universityLogoUrl: zod.string().nullish(),
   facultyLogoUrl: zod.string().nullish(),
+  studentId: zod.string().nullish(),
 });
 
 /**

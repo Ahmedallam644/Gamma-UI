@@ -75,6 +75,7 @@
     "zod": "catalog:"
   },
   "dependencies": {
+    "firebase": "^12.12.1",
     "i18next": "^26.0.8",
     "react-i18next": "^17.0.6"
   }

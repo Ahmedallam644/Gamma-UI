@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCreateProject } from "@workspace/api-client-react";
 import { saveProjectId } from "@/lib/local-projects";
+import { useAuth } from "@/contexts/auth";
 import { Layout } from "@/components/layout";
 import { LogoUpload } from "@/components/logo-upload";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,7 @@ export default function HomePage() {
   const { toast } = useToast();
   const [step, setStep] = useState(0);
   const isRTL = i18n.language === "ar";
+  const { user } = useAuth();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -97,6 +99,7 @@ export default function HomePage() {
           templateName: values.templateName,
           universityLogoUrl: values.universityLogoUrl ?? null,
           facultyLogoUrl: values.facultyLogoUrl ?? null,
+          studentId: user?.uid ?? null,
         },
       });
       saveProjectId(project.id);

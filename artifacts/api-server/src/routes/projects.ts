@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { projectsTable } from "@workspace/db";
-import { eq, desc, count } from "drizzle-orm";
+import { eq, desc, count, and } from "drizzle-orm";
 import { generateAndUploadDocument } from "../services/document-generator.js";
 import {
   CreateProjectBody,
@@ -21,14 +21,19 @@ const router = Router();
 router.get("/projects", async (req, res) => {
   try {
     const query = ListProjectsQueryParams.parse(req.query);
+    const studentId = req.query.studentId as string | undefined;
     const conditions = [];
     if (query.status) {
       conditions.push(eq(projectsTable.status, query.status));
     }
+    if (studentId) {
+      conditions.push(eq(projectsTable.studentId, studentId));
+    }
+    const whereClause = conditions.length > 1 ? and(...conditions) : conditions.length === 1 ? conditions[0] : undefined;
     const projects = await db
       .select()
       .from(projectsTable)
-      .where(conditions.length > 0 ? conditions[0] : undefined)
+      .where(whereClause)
       .orderBy(desc(projectsTable.createdAt))
       .limit(query.limit)
       .offset(query.offset);
@@ -36,7 +41,7 @@ router.get("/projects", async (req, res) => {
     const [{ value: total }] = await db
       .select({ value: count() })
       .from(projectsTable)
-      .where(conditions.length > 0 ? conditions[0] : undefined);
+      .where(whereClause);
 
     res.json({ projects: projects.map(formatProject), total: Number(total) });
   } catch (err) {
@@ -61,6 +66,7 @@ router.post("/projects", async (req, res) => {
         templateName: body.templateName ?? "default",
         universityLogoUrl: body.universityLogoUrl ?? null,
         facultyLogoUrl: body.facultyLogoUrl ?? null,
+        studentId: body.studentId ?? null,
         status: "draft",
       })
       .returning();
@@ -288,22 +294,54 @@ async function generateWithFallback(
   const isArabic = project.language === "ar";
 
   const systemPrompt = isArabic
-    ? `أنت خبير أكاديمي متخصص في كتابة مشاريع التخرج لطلاب التمريض. اكتب محتوى أكاديمياً احترافياً باللغة العربية الفصحى.`
-    : `You are an academic expert specializing in writing graduation research projects for nursing students. Write professional academic content in English.`;
+    ? `أنت خبير أكاديمي متخصص في كتابة الأبحاث العلمية لطلاب التمريض. اكتب المحتوى الأكاديمي فقط بالعربية الفصحى.
+قواعد صارمة يجب اتباعها:
+- لا تكتب عنوان البحث أو "مشروع التخرج" أو اسم الطالب أو المشرف أو القسم - هذه موجودة في صفحة الغلاف
+- ابدأ مباشرة من عنوان القسم الأول: **المقدمة:**
+- استخدم التنسيق: **عنوان القسم:** لكل قسم
+- اكتب بأسلوب أكاديمي رصين`
+    : `You are an academic expert writing nursing research papers. Write ONLY the academic content body in English.
+Strict rules:
+- Do NOT write the document title, "graduation project", student names, supervisor, or department - those are on the cover page
+- Start directly with the first section heading: **Introduction:**
+- Use format: **Section Title:** for each section
+- Write in formal academic style`;
 
   const userPrompt = isArabic
-    ? `اكتب مشروع تخرج أكاديمي شامل حول موضوع: "${project.topic}"
-الطلاب: ${(project.studentNames as string[]).join("، ")}
-المشرف: ${project.supervisorName}
+    ? `اكتب بحثاً علمياً أكاديمياً شاملاً حول موضوع: "${project.topic}"
 القسم: ${project.department}
+عدد الصفحات المطلوب: ${project.pageCount ?? 20}
 
-اكتب المحتوى بتنسيق كامل يشمل: المقدمة، أهمية الموضوع، الأهداف، الإطار النظري، الفصل الأول، الفصل الثاني، الفصل الثالث، التوصيات، والخاتمة. استخدم مراجع أكاديمية حديثة (2021-2025).`
-    : `Write a comprehensive academic graduation project on the topic: "${project.topic}"
-Students: ${(project.studentNames as string[]).join(", ")}
-Supervisor: ${project.supervisorName}
+ابدأ مباشرة بالأقسام الأكاديمية بهذا الترتيب (لا تضف أي مقدمة قبل المقدمة):
+**المقدمة:**
+**أهمية الموضوع:**
+**الأهداف:**
+**الإطار النظري:**
+**الفصل الأول:**
+**الفصل الثاني:**
+**الفصل الثالث:**
+**التوصيات:**
+**الخاتمة:**
+**المراجع:**
+
+استخدم مراجع أكاديمية حديثة (2021-2025). اكتب محتوى وافياً لكل قسم.`
+    : `Write a comprehensive academic research paper on the topic: "${project.topic}"
 Department: ${project.department}
+Required length: ${project.pageCount ?? 20} pages
 
-Write full content including: Introduction, Importance, Objectives, Theoretical Framework, Chapter 1, Chapter 2, Chapter 3, Recommendations, and Conclusion. Use recent academic references (2021-2025).`;
+Start directly with the academic sections in this order (do NOT add anything before Introduction):
+**Introduction:**
+**Importance:**
+**Objectives:**
+**Theoretical Framework:**
+**Chapter 1:**
+**Chapter 2:**
+**Chapter 3:**
+**Recommendations:**
+**Conclusion:**
+**References:**
+
+Use recent academic references (2021-2025). Write thorough content for each section.`;
 
   const keys = [
     { provider: "groq", key: process.env.GROQ_KEY_1, model: "llama-3.3-70b-versatile" },

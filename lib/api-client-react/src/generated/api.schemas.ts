@@ -88,6 +88,7 @@ export interface CreateProjectBody {
   templateName?: string | null;
   universityLogoUrl?: string | null;
   facultyLogoUrl?: string | null;
+  studentId?: string | null;
 }
 
 export interface SelectImagesBody {
@@ -147,6 +148,7 @@ export interface AdminStats {
 }
 
 export type ListProjectsParams = {
+  studentId?: string;
   status?: ListProjectsStatus;
   limit?: number;
   offset?: number;

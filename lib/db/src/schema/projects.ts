@@ -21,6 +21,7 @@ export const projectsTable = pgTable("projects", {
   docxDownloadUrl: text("docx_download_url"),
   pptxDownloadUrl: text("pptx_download_url"),
   rejectionReason: text("rejection_reason"),
+  studentId: text("student_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

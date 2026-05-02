@@ -2,7 +2,8 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
-import { FlaskConical, LayoutDashboard, Folder } from "lucide-react";
+import { FlaskConical, LayoutDashboard, Folder, LogOut, User } from "lucide-react";
+import { useAuth } from "@/contexts/auth";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ interface LayoutProps {
 export function Layout({ children, className }: LayoutProps) {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
+  const { user, logout } = useAuth();
 
   return (
     <div className={cn("min-h-screen bg-background", isRTL ? "rtl" : "ltr")}>
@@ -55,12 +57,33 @@ export function Layout({ children, className }: LayoutProps) {
                   English
                 </button>
               </div>
-              <Link href="/my-projects">
-                <Button variant="outline" size="sm" className="gap-2 hidden sm:flex">
-                  <Folder className="h-4 w-4" />
-                  {t("myProjects")}
-                </Button>
-              </Link>
+
+              {user && (
+                <>
+                  <Link href="/my-projects">
+                    <Button variant="outline" size="sm" className="gap-2 hidden sm:flex">
+                      <Folder className="h-4 w-4" />
+                      {t("myProjects")}
+                    </Button>
+                  </Link>
+                  <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/50 border">
+                    <User className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <span className="text-xs text-muted-foreground truncate max-w-[120px]">
+                      {user.displayName || user.email}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-2 text-muted-foreground hover:text-destructive hidden sm:flex"
+                    onClick={() => logout()}
+                    title={t("logoutBtn")}
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
+
               <Link href="/admin">
                 <Button variant="ghost" size="sm" className="gap-2 hidden sm:flex text-muted-foreground">
                   <LayoutDashboard className="h-4 w-4" />
