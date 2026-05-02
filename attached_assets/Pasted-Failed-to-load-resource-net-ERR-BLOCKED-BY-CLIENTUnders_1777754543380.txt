@@ -1,0 +1,35 @@
+Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+googleads.g.doubleclick.net/pagead/viewthroughconversion/11411994397/?random=1777751223789&cv=11&fst=1777751223789&fmt=3&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be64t1v9171242957za200zd9171242957xec&gcd=13l3l3l3l1l1&dma=0&tag_exp=0~115616986~115938466~115938468~116363097&u_w=1920&u_h=1080&url=https%3A%2F%2Freplit.com%2F%40am25267723%2FGamma-UI-Frontend&rcb=15&frm=0&tiba=Loading...%20-%20Replit&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1469033087.1777735485&data=event%3Dgtag.config:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+0wavzx4wm.ylw.js:21 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+0wavzx4wm.ylw.js:21 Download the Apollo DevTools for a better development experience: https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=594624688&gjid=722469409&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=620301121:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+Gamma-UI-Frontend:1 Denying load of chrome-extension://icgjkfebljaiiccoeeihocdmjnojmeal/assets/pollyfill-1a6d9aea.js. Resources must be listed in the web_accessible_resources manifest key in order to be loaded by pages outside the extension.Understand this error
+Gamma-UI-Frontend:1 Denying load of chrome-extension://icgjkfebljaiiccoeeihocdmjnojmeal/assets/Setting-6bd6f942.js. Resources must be listed in the web_accessible_resources manifest key in order to be loaded by pages outside the extension.Understand this error
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILEDUnderstand this error
+TypeError: Failed to fetch dynamically imported module: chrome-extension://41a20979-d87f-4950-a0c9-5c5e69b2bcc4/assets/index.tsx-3a917141.jsUnderstand this error
+ Applying inline style violates the following Content Security Policy directive 'style-src 'self' 'sha256-0hAheEzaMe6uXIKV4EehS9pu1am1lj/KnnzrOYqckXk=''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Applying inline style violates the following Content Security Policy directive 'style-src 'self' 'sha256-0hAheEzaMe6uXIKV4EehS9pu1am1lj/KnnzrOYqckXk=''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+ Loading the script 'blob:https://js.stripe.com/768c8af3-3124-4514-be68-9bbbe4624890' violates the following Content Security Policy directive: "script-src 'self'". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Loading the script 'blob:https://js.stripe.com/768c8af3-3124-4514-be68-9bbbe4624890' violates the following Content Security Policy directive: "script-src 'self'". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+0wavzx4wm.ylw.js:21 [LaunchDarkly] LaunchDarkly client initialized
+ Applying inline style violates the following Content Security Policy directive 'style-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Applying inline style violates the following Content Security Policy directive 'style-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
