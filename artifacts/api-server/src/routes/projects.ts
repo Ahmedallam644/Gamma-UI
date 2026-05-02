@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { projectsTable } from "@workspace/db";
 import { eq, desc, count } from "drizzle-orm";
+import { generateAndUploadDocument } from "../services/document-generator.js";
 import {
   CreateProjectBody,
   ListProjectsQueryParams,
@@ -180,10 +181,46 @@ router.post("/projects/:id/approve", async (req, res) => {
       .where(eq(projectsTable.id, parseInt(id)));
     if (!project) return res.status(404).json({ error: "Project not found" });
 
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME ?? "";
+    const apiKey = process.env.CLOUDINARY_API_KEY ?? "";
+    const apiSecret = process.env.CLOUDINARY_API_SECRET ?? "";
+
+    let docxDownloadUrl: string | null = project.docxDownloadUrl ?? null;
+    let pptxDownloadUrl: string | null = project.pptxDownloadUrl ?? null;
+
+    if (project.generatedContent && cloudName && apiKey && apiSecret) {
+      try {
+        const result = await generateAndUploadDocument(
+          {
+            topic: project.topic,
+            studentNames: project.studentNames as string[],
+            supervisorName: project.supervisorName,
+            department: project.department,
+            language: project.language,
+            documentType: project.documentType ?? "word",
+            templateName: project.templateName ?? "default",
+            pageCount: project.pageCount ?? 20,
+            generatedContent: project.generatedContent,
+            selectedImages: (project.selectedImages as string[]) ?? [],
+            universityLogoUrl: project.universityLogoUrl,
+            facultyLogoUrl: project.facultyLogoUrl,
+            projectId: String(project.id),
+          },
+          { cloudName, apiKey, apiSecret }
+        );
+        if (result.docxUrl) docxDownloadUrl = result.docxUrl;
+        if (result.pptxUrl) pptxDownloadUrl = result.pptxUrl;
+      } catch (genErr) {
+        req.log.error(genErr, "Document generation failed, approving without download link");
+      }
+    }
+
     const [updated] = await db
       .update(projectsTable)
       .set({
         status: "completed",
+        docxDownloadUrl,
+        pptxDownloadUrl,
         updatedAt: new Date(),
       })
       .where(eq(projectsTable.id, parseInt(id)))

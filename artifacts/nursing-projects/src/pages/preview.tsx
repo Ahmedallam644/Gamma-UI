@@ -42,7 +42,7 @@ export default function PreviewPage() {
   }
 
   const paragraphs = (project.generatedContent ?? "")
-    .split(/\n{2,}/)
+    .split(/\n+/)
     .map((p) => p.trim())
     .filter(Boolean);
 
@@ -79,19 +79,23 @@ export default function PreviewPage() {
                 <p className="text-muted-foreground text-sm text-center py-8">{t("noProjects")}</p>
               ) : (
                 paragraphs.map((para, i) => {
-                  const isHeading = para.length < 80 && (
-                    /^(#{1,3}\s|[٠-٩\d]+[\.\)]\s|[أ-ي]+\s*[-:]\s|\*\*|الفصل|Chapter|Introduction|المقدمة|الخاتمة|Conclusion|التوصيات|Recommendations|الأهداف|Objectives)/i.test(para)
+                  const clean = para.replace(/\*\*/g, "").replace(/^#+\s*/, "").trim();
+                  if (!clean) return null;
+                  const isHeading = para.length < 100 && (
+                    /^#{1,3}\s/.test(para) ||
+                    /^(الفصل|المقدمة|الخاتمة|التوصيات|الأهداف|الإطار|المراجع|ملخص|الأساليب|الطرق|النتائج|المناقشة|أهمية|خلفية|Chapter|Introduction|Conclusion|Recommendations|Objectives|Framework|References|Summary|Abstract|Methods|Results|Discussion|Importance|Background)/i.test(clean) ||
+                    /^\*\*[^*]+\*\*:?\s*$/.test(para)
                   );
                   return isHeading ? (
                     <h3
                       key={i}
-                      className="font-bold text-foreground mt-5 mb-2 text-base border-b border-border/50 pb-1"
+                      className="font-semibold text-primary mt-6 mb-2 text-base border-b border-primary/20 pb-1.5"
                     >
-                      {para.replace(/^#+\s*|\*\*/g, "")}
+                      {clean}
                     </h3>
                   ) : (
-                    <p key={i} className="text-sm text-foreground/90 leading-relaxed mb-3">
-                      {para}
+                    <p key={i} className="text-sm text-foreground/85 leading-relaxed mb-3 whitespace-pre-line">
+                      {clean}
                     </p>
                   );
                 })

@@ -184,7 +184,7 @@ export default function AdminPage() {
                     </a>
                   )}
 
-                  {project.status === "pending_approval" && (
+                  {(project.status === "pending_approval" || project.status === "payment_pending" || project.status === "images_pending") && (
                     <>
                       <Button
                         size="sm"
