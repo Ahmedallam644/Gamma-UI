@@ -21,6 +21,9 @@ interface Section { heading: string | null; paragraphs: string[] }
 const AR_HEADS = /^(الفصل|المقدمة|الخاتمة|التوصيات|الأهداف|الإطار|المراجع|ملخص|الأساليب|الطرق|النتائج|المناقشة|أهمية|خلفية)/i;
 const EN_HEADS = /^(Chapter|Introduction|Conclusion|Recommendations|Objectives|Framework|References|Summary|Abstract|Methods|Results|Discussion|Importance|Background)/i;
 
+// Metadata lines injected by old AI prompts — skip these silently
+const META_SKIP = /^(المرشح|المشرف|القسم|مشروع التخرج|Students?:|Supervisor:|Department:|Student:|المرشحون)/i;
+
 function isHeadingText(text: string): boolean {
   return (AR_HEADS.test(text) || EN_HEADS.test(text)) && text.length < 100;
 }
@@ -31,6 +34,10 @@ function parseContent(content: string, _isArabic: boolean): Section[] {
   let current: Section = { heading: null, paragraphs: [] };
 
   for (const line of lines) {
+    // Strip any line that is pure document metadata (المرشح, المشرف, etc.)
+    const stripped = line.replace(/\*\*/g, "").replace(/^#+\s*/, "").replace(/:+$/, "").trim();
+    if (META_SKIP.test(stripped)) continue;
+
     let headingText: string | null = null;
 
     if (/^#{1,3}\s+/.test(line)) {
@@ -56,6 +63,27 @@ function parseContent(content: string, _isArabic: boolean): Section[] {
   }
   if (current.heading !== null || current.paragraphs.length > 0) sections.push(current);
   return sections;
+}
+
+/** Convert a block of paragraph text into concise bullet points (≤ 3 per slide). */
+function toBullets(paragraphs: string[], maxBullets = 4, maxCharsPerBullet = 160): string[] {
+  const bullets: string[] = [];
+  for (const para of paragraphs) {
+    const cleaned = para.replace(/\*\*/g, "").replace(/^[*•\-–]\s*/, "").trim();
+    if (!cleaned) continue;
+    // Split on sentence boundaries
+    const sentences = cleaned
+      .split(/(?<=[.؟!])\s+/)
+      .map(s => s.replace(/^[*•\-–]\s*/, "").trim())
+      .filter(s => s.length > 15);
+    for (const s of sentences) {
+      const short = s.length > maxCharsPerBullet ? s.slice(0, maxCharsPerBullet) + "…" : s;
+      bullets.push(short);
+      if (bullets.length >= maxBullets) break;
+    }
+    if (bullets.length >= maxBullets) break;
+  }
+  return bullets;
 }
 
 async function fetchImageBuffer(url: string): Promise<Buffer | null> {
@@ -304,7 +332,7 @@ async function buildPptxDocument({ opts, colors, sections, imageBuffers, uniLogo
   titleSlide.background = { color: bgColor };
 
   titleSlide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.2, fill: { color: slideHeaderBg } });
-  titleSlide.addText(isArabic ? "مشروع تخرج" : "Graduation Project", { x: 0, y: 0.1, w: "100%", h: 0.6, align: "center", color: "FFFFFF", bold: true, fontSize: 24, fontFace: isArabic ? "Arial" : "Calibri" });
+  titleSlide.addText(opts.department || (isArabic ? "كلية التمريض" : "College of Nursing"), { x: 0.3, y: 0.1, w: "100%", h: 0.65, align: isArabic ? "right" : "left", color: "FFFFFF", bold: true, fontSize: 22, fontFace: isArabic ? "Arial" : "Calibri", rtlMode: isArabic });
 
   if (uniLogoBuf || facLogoBuf) {
     let logoX = 0.3;
@@ -339,16 +367,27 @@ async function buildPptxDocument({ opts, colors, sections, imageBuffers, uniLogo
     }
 
     const hasImage = imgIndex < imageBuffers.length;
-    const textW = hasImage ? 5.5 : 9.4;
-    const bodyText = section.paragraphs.map(p => p.replace(/\*\*/g, "").replace(/^#+\s*/, "").trim()).filter(Boolean).join("\n\n");
+    const textX = isArabic ? (hasImage ? 3.8 : 0.3) : 0.3;
+    const textW = hasImage ? 5.8 : 9.4;
 
-    if (bodyText) {
-      slide.addText(bodyText, {
-        x: isArabic ? (hasImage ? 3.7 : 0.3) : 0.3,
-        y: 1.0, w: textW, h: 4.5,
-        color: textColor, fontSize: 14, fontFace: isArabic ? "Arial" : "Calibri",
-        align: isArabic ? "right" : "left", rtlMode: isArabic,
-        valign: "top", wrap: true,
+    // Build structured bullet-point objects
+    const bullets = toBullets(section.paragraphs, 5, 180);
+    if (bullets.length > 0) {
+      const bulletObjs = bullets.map((b, i) => ({
+        text: (i === 0 ? "" : "") + b,
+        options: {
+          color: textColor,
+          fontSize: bullets.length > 3 ? 13 : 15,
+          fontFace: isArabic ? "Arial" : "Calibri",
+          bullet: { type: "bullet" as const },
+          paraSpaceAfter: 6,
+          align: isArabic ? ("right" as const) : ("left" as const),
+          rtlMode: isArabic,
+        },
+      }));
+      slide.addText(bulletObjs, {
+        x: textX, y: 1.0, w: textW, h: 4.6,
+        valign: "top",
       });
     }
 
@@ -356,7 +395,7 @@ async function buildPptxDocument({ opts, colors, sections, imageBuffers, uniLogo
       const imgBuf = imageBuffers[imgIndex++];
       slide.addImage({
         data: `data:image/jpeg;base64,${imgBuf.toString("base64")}`,
-        x: isArabic ? 0.3 : 6.0, y: 1.0, w: 3.5, h: 4.2,
+        x: isArabic ? 0.2 : 6.2, y: 1.0, w: 3.5, h: 4.2,
         sizing: { type: "contain", w: 3.5, h: 4.2 },
       });
     }
