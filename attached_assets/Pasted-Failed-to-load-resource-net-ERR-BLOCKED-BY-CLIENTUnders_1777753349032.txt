@@ -1,0 +1,41 @@
+Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1488678878&gjid=397038266&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=688237812:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=652892359&gjid=653109630&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=10162335:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+injected.js:37 [vite] SyntaxError: The requested module '/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?t=1777752570323' does not provide an export named 'getGetProjectQueryKey'
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] Failed to reload /src/pages/generate.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] SyntaxError: The requested module '/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?t=1777752570323' does not provide an export named 'useCreateProject'
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] Failed to reload /src/pages/home.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] SyntaxError: The requested module '/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?t=1777752570323' does not provide an export named 'getListProjectsQueryKey'
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] Failed to reload /src/pages/admin.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] SyntaxError: The requested module '/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?t=1777752570323' does not provide an export named 'getGetProjectQueryKey'
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] Failed to reload /src/pages/status.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] SyntaxError: The requested module '/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?t=1777752570323' does not provide an export named 'getGetProjectQueryKey'
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] Failed to reload /src/pages/payment.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] SyntaxError: The requested module '/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?t=1777752570323' does not provide an export named 'getGetAdminStatsQueryKey'
+(anonymous) @ injected.js:37Understand this error
+injected.js:37 [vite] Failed to reload /src/pages/admin-stats.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37Understand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=376716847&gjid=1767380876&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=2017800766:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=39089687&gjid=301269191&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=2107967960:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/api/media/upload-image:1  Failed to load resource: the server responded with a status of 413 (Request Entity Too Large)Understand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=168439278&gjid=69991682&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1302758990:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=426761072&gjid=327855164&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=674278434:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1580282299&gjid=1901909037&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=428105510:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/src/App.tsx?t=1777753019119:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+injected.js:37 [vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37Understand this error
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/src/App.tsx?t=1777753026784:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/src/App.tsx?t=1777753036754:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/src/App.tsx?t=1777753038923:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=468425529&gjid=996307724&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1913862067:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/api/media/upload-image:1  Failed to load resource: the server responded with a status of 413 (Request Entity Too Large)Understand this error

@@ -93,6 +93,8 @@ const resources = {
       viewProject: "عرض",
       continueProject: "إكمال",
       adminHint: "للوصول للإدارة: admin / nursing2025",
+      previewProject: "معاينة المشروع",
+      previewContent: "معاينة المحتوى",
     },
   },
   en: {
@@ -186,6 +188,8 @@ const resources = {
       viewProject: "View",
       continueProject: "Continue",
       adminHint: "Admin access: admin / nursing2025",
+      previewProject: "Preview Project",
+      previewContent: "Preview Content",
     },
   },
 };

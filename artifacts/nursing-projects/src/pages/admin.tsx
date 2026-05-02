@@ -7,7 +7,7 @@ import { Layout, StatusBadge } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, XCircle, Eye, BarChart2, Loader2, ShieldCheck } from "lucide-react";
+import { CheckCircle2, XCircle, Eye, BarChart2, Loader2, ShieldCheck, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 
@@ -166,7 +166,15 @@ export default function AdminPage() {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                  {project.generatedContent && (
+                    <Link href={`/preview/${project.id}`}>
+                      <Button variant="outline" size="sm" className="gap-1.5 text-xs" data-testid={`btn-preview-${project.id}`}>
+                        <BookOpen className="h-3.5 w-3.5" />
+                        {isRTL ? "معاينة" : "Preview"}
+                      </Button>
+                    </Link>
+                  )}
                   {project.receiptUrl && (
                     <a href={project.receiptUrl} target="_blank" rel="noopener noreferrer">
                       <Button variant="outline" size="sm" className="gap-1.5 text-xs" data-testid={`btn-view-receipt-${project.id}`}>

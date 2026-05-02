@@ -43,6 +43,7 @@ router.get("/admin/stats", async (req, res) => {
         supervisorName: p.supervisorName,
         department: p.department,
         language: p.language,
+        documentType: p.documentType ?? "word",
         status: p.status,
         generatedContent: p.generatedContent ?? null,
         selectedImages: (p.selectedImages as string[]) ?? null,

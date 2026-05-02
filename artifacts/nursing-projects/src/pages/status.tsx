@@ -5,7 +5,7 @@ import { useGetProject, getGetProjectQueryKey } from "@workspace/api-client-reac
 import { Layout, StatusBadge } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Download, Clock, CheckCircle2, XCircle, Loader2, RefreshCcw, Copy } from "lucide-react";
+import { Download, CheckCircle2, XCircle, Loader2, RefreshCcw, Copy, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const STATUS_STEPS = ["draft", "generating", "images_pending", "payment_pending", "pending_approval", "completed"] as const;
@@ -172,6 +172,12 @@ export default function StatusPage() {
           </div>
 
           <div className="flex gap-3 mt-4">
+            {project.generatedContent && (
+              <Button variant="outline" className="flex-1 gap-2" onClick={() => setLocation(`/preview/${id}`)} data-testid="btn-preview">
+                <Eye className="h-4 w-4" />
+                {t("previewContent")}
+              </Button>
+            )}
             <Button variant="outline" className="flex-1 gap-2" onClick={copyLink} data-testid="btn-copy-link">
               <Copy className="h-4 w-4" />
               {t("copyLink")}
