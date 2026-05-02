@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCreateProject } from "@workspace/api-client-react";
+import { saveProjectId } from "@/lib/local-projects";
 import { Layout } from "@/components/layout";
 import { LogoUpload } from "@/components/logo-upload";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,7 @@ export default function HomePage() {
           facultyLogoUrl: values.facultyLogoUrl ?? null,
         },
       });
+      saveProjectId(project.id);
       setLocation(`/generate/${project.id}`);
     } catch {
       toast({ title: t("errorOccurred"), variant: "destructive" });
@@ -249,7 +251,7 @@ export default function HomePage() {
                             <button
                               key={lang}
                               type="button"
-                              onClick={() => { form.setValue("language", lang); i18n.changeLanguage(lang); }}
+                              onClick={() => form.setValue("language", lang)}
                               className={cn(
                                 "flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all",
                                 form.watch("language") === lang
@@ -258,7 +260,7 @@ export default function HomePage() {
                               )}
                               data-testid={`btn-lang-${lang}`}
                             >
-                              {lang === "ar" ? t("arabic") : t("english")}
+                              {lang === "ar" ? "العربية" : "English"}
                             </button>
                           ))}
                         </div>

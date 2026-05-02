@@ -65,7 +65,7 @@ router.post("/media/upload-image", async (req, res) => {
 
     const stringToSign = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
     const crypto = await import("crypto");
-    const signature = crypto.createHash("sha256").update(stringToSign).digest("hex");
+    const signature = crypto.createHash("sha1").update(stringToSign).digest("hex");
 
     const formData = new FormData();
     formData.append("file", body.dataUri);

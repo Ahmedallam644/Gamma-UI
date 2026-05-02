@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
-import { FlaskConical, LayoutDashboard } from "lucide-react";
+import { FlaskConical, LayoutDashboard, Folder } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -55,10 +55,15 @@ export function Layout({ children, className }: LayoutProps) {
                   English
                 </button>
               </div>
-              <Link href="/admin">
+              <Link href="/my-projects">
                 <Button variant="outline" size="sm" className="gap-2 hidden sm:flex">
+                  <Folder className="h-4 w-4" />
+                  {t("myProjects")}
+                </Button>
+              </Link>
+              <Link href="/admin">
+                <Button variant="ghost" size="sm" className="gap-2 hidden sm:flex text-muted-foreground">
                   <LayoutDashboard className="h-4 w-4" />
-                  {t("adminTitle")}
                 </Button>
               </Link>
             </div>

@@ -11,6 +11,7 @@ import PaymentPage from "@/pages/payment";
 import StatusPage from "@/pages/status";
 import AdminPage from "@/pages/admin";
 import AdminStatsPage from "@/pages/admin-stats";
+import MyProjectsPage from "@/pages/my-projects";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -32,6 +33,7 @@ function AppShell() {
       <Route path="/generate/:id" component={GeneratePage} />
       <Route path="/payment/:id" component={PaymentPage} />
       <Route path="/status/:id" component={StatusPage} />
+      <Route path="/my-projects" component={MyProjectsPage} />
       <Route path="/admin" component={AdminPage} />
       <Route path="/admin/stats" component={AdminStatsPage} />
       <Route component={NotFound} />
