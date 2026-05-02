@@ -2,13 +2,68 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGetProject, getGetProjectQueryKey, useSearchPexelsImages, getSearchPexelsImagesQueryKey, useSelectProjectImages } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useGetProject, getGetProjectQueryKey, useSelectProjectImages } from "@workspace/api-client-react";
+import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { Layout, StatusBadge } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, ImageIcon, Loader2, Sparkles, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+interface PexelsPhoto {
+  id: number;
+  url: string;
+  photographer: string;
+  src: { medium: string; large: string };
+}
+
+interface PexelsResult {
+  photos: PexelsPhoto[];
+  total_results: number;
+}
+
+function extractHeadings(content: string): string[] {
+  const lines = content.split("\n");
+  const headings: string[] = [];
+  const seen = new Set<string>();
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.length > 100) continue;
+
+    let heading = "";
+
+    if (/^#{1,3}\s+/.test(trimmed)) {
+      heading = trimmed.replace(/^#+\s*/, "").replace(/\*+/g, "").trim();
+    } else if (
+      /^(الفصل|المقدمة|الخاتمة|التوصيات|الأهداف|الإطار|المراجع|ملخص|الأساليب|الطرق|النتائج|المناقشة)/i.test(trimmed) &&
+      trimmed.length < 80
+    ) {
+      heading = trimmed.replace(/^\*+|\*+$/g, "").trim();
+    } else if (
+      /^(Chapter|Introduction|Conclusion|Recommendations|Objectives|Framework|References|Summary|Methods|Results|Discussion)/i.test(trimmed) &&
+      trimmed.length < 80
+    ) {
+      heading = trimmed.replace(/^\*+|\*+$/g, "").trim();
+    }
+
+    if (heading && !seen.has(heading)) {
+      seen.add(heading);
+      headings.push(heading);
+    }
+
+    if (headings.length >= 5) break;
+  }
+
+  return headings;
+}
+
+async function fetchPexelsSection(query: string, base: string): Promise<PexelsResult> {
+  const url = `${base}/api/media/pexels-search?query=${encodeURIComponent(query)}&per_page=5`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Pexels error");
+  return res.json() as Promise<PexelsResult>;
+}
 
 export default function GeneratePage() {
   const { id } = useParams<{ id: string }>();
@@ -21,10 +76,12 @@ export default function GeneratePage() {
   const [streamedSentences, setStreamedSentences] = useState<string[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamDone, setStreamDone] = useState(false);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [selectedImages, setSelectedImages] = useState<Record<string, string>>({});
   const [hasStarted, setHasStarted] = useState(false);
   const bufferRef = useRef("");
   const endRef = useRef<HTMLDivElement>(null);
+
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   const { data: project } = useGetProject(id!, {
     query: {
@@ -34,15 +91,17 @@ export default function GeneratePage() {
     },
   });
 
-  const { data: pexelsData, isLoading: imagesLoading } = useSearchPexelsImages(
-    { query: project?.topic ?? "", per_page: 5 },
-    {
-      query: {
-        enabled: streamDone && !!project?.topic,
-        queryKey: getSearchPexelsImagesQueryKey({ query: project?.topic ?? "", per_page: 5 }),
-      },
-    }
-  );
+  const content = project?.generatedContent ?? "";
+  const headings = streamDone && content ? extractHeadings(content) : [];
+
+  const sectionQueries = useQueries({
+    queries: headings.map((heading) => ({
+      queryKey: ["pexels-section", heading],
+      queryFn: () => fetchPexelsSection(heading, base),
+      enabled: streamDone && headings.length > 0,
+      staleTime: Infinity,
+    })),
+  });
 
   const selectImagesMutation = useSelectProjectImages();
 
@@ -57,7 +116,6 @@ export default function GeneratePage() {
     bufferRef.current = "";
 
     try {
-      const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       const response = await fetch(`${base}/api/projects/${id}/generate`, { method: "POST" });
       if (!response.body) throw new Error("No stream");
 
@@ -109,7 +167,7 @@ export default function GeneratePage() {
       setIsStreaming(false);
       toast({ title: t("errorOccurred"), variant: "destructive" });
     }
-  }, [id, hasStarted, t, toast, queryClient]);
+  }, [id, hasStarted, t, toast, queryClient, base]);
 
   useEffect(() => {
     if (project && !hasStarted) {
@@ -128,26 +186,33 @@ export default function GeneratePage() {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [streamedSentences]);
 
-  const toggleImage = (url: string) => {
-    setSelectedImages((prev) =>
-      prev.includes(url)
-        ? prev.filter((u) => u !== url)
-        : prev.length < 5
-        ? [...prev, url]
-        : prev
-    );
+  const toggleImage = (sectionKey: string, url: string) => {
+    setSelectedImages((prev) => {
+      if (prev[sectionKey] === url) {
+        const next = { ...prev };
+        delete next[sectionKey];
+        return next;
+      }
+      return { ...prev, [sectionKey]: url };
+    });
   };
 
+  const selectedCount = Object.keys(selectedImages).length;
+  const allUrls = Object.values(selectedImages);
+
   const confirmImages = async () => {
-    if (!selectedImages.length || !id) return;
+    if (!allUrls.length || !id) return;
     try {
-      await selectImagesMutation.mutateAsync({ id, data: { imageUrls: selectedImages } });
+      await selectImagesMutation.mutateAsync({ id, data: { imageUrls: allUrls } });
       queryClient.invalidateQueries({ queryKey: getGetProjectQueryKey(id) });
       setLocation(`/payment/${id}`);
     } catch {
       toast({ title: t("errorOccurred"), variant: "destructive" });
     }
   };
+
+  const allSectionsLoaded = sectionQueries.length > 0 && sectionQueries.every((q) => !q.isLoading);
+  const anySectionLoading = sectionQueries.some((q) => q.isLoading);
 
   return (
     <Layout>
@@ -224,14 +289,18 @@ export default function GeneratePage() {
                 <h2 className="font-semibold text-foreground">
                   {t("selectImages")}
                 </h2>
-                {selectedImages.length > 0 && (
+                {selectedCount > 0 && (
                   <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                    {selectedImages.length} {t("imagesSelected")}
+                    {selectedCount} {t("imagesSelected")}
                   </span>
                 )}
               </div>
 
-              {imagesLoading ? (
+              <p className="text-xs text-muted-foreground mb-4">
+                {t("imagesPerSection")}
+              </p>
+
+              {anySectionLoading && !allSectionsLoaded ? (
                 <div className="flex items-center justify-center h-40 rounded-xl border bg-muted/30">
                   <div className="flex flex-col items-center gap-2">
                     <Loader2 className="h-6 w-6 text-muted-foreground animate-spin" />
@@ -239,49 +308,76 @@ export default function GeneratePage() {
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-5 gap-3 mb-4">
-                  {pexelsData?.photos.map((photo) => {
-                    const isSelected = selectedImages.includes(photo.src.large);
+                <div className="flex flex-col gap-6">
+                  {headings.map((heading, si) => {
+                    const result = sectionQueries[si]?.data;
+                    if (!result?.photos.length) return null;
+                    const sectionKey = `section_${si}`;
                     return (
                       <motion.div
-                        key={photo.id}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => toggleImage(photo.src.large)}
-                        className={cn(
-                          "relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer border-2 transition-all",
-                          isSelected
-                            ? "border-primary shadow-[0_0_0_3px_hsl(var(--primary)/0.3)]"
-                            : "border-transparent"
-                        )}
-                        data-testid={`img-pexels-${photo.id}`}
+                        key={sectionKey}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: si * 0.1 }}
                       >
-                        <img src={photo.src.medium} alt={photo.photographer} className="w-full h-full object-cover" />
-                        <AnimatePresence>
-                          {isSelected && (
-                            <motion.div
-                              initial={{ opacity: 0, scale: 0.5 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0, scale: 0.5 }}
-                              className="absolute inset-0 bg-primary/20 flex items-center justify-center"
-                            >
-                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary shadow-lg">
-                                <CheckCircle2 className="h-5 w-5 text-primary-foreground" />
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                        <div className="flex items-center gap-2 mb-2.5">
+                          <div className="h-1 w-1 rounded-full bg-primary" />
+                          <h3 className="text-sm font-semibold text-foreground truncate max-w-xs" dir={isRTL ? "rtl" : "ltr"}>
+                            {heading.replace(/^#+\s*/, "")}
+                          </h3>
+                        </div>
+                        <div className="grid grid-cols-5 gap-2">
+                          {result.photos.map((photo) => {
+                            const isSelected = selectedImages[sectionKey] === photo.src.large;
+                            return (
+                              <motion.div
+                                key={photo.id}
+                                whileHover={{ scale: 1.04 }}
+                                whileTap={{ scale: 0.96 }}
+                                onClick={() => toggleImage(sectionKey, photo.src.large)}
+                                className={cn(
+                                  "relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer border-2 transition-all",
+                                  isSelected
+                                    ? "border-primary shadow-[0_0_0_3px_hsl(var(--primary)/0.3)]"
+                                    : "border-transparent hover:border-primary/40"
+                                )}
+                              >
+                                <img src={photo.src.medium} alt={photo.photographer} className="w-full h-full object-cover" loading="lazy" />
+                                <AnimatePresence>
+                                  {isSelected && (
+                                    <motion.div
+                                      initial={{ opacity: 0, scale: 0.5 }}
+                                      animate={{ opacity: 1, scale: 1 }}
+                                      exit={{ opacity: 0, scale: 0.5 }}
+                                      className="absolute inset-0 bg-primary/20 flex items-center justify-center"
+                                    >
+                                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary shadow-lg">
+                                        <CheckCircle2 className="h-5 w-5 text-primary-foreground" />
+                                      </div>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
                       </motion.div>
                     );
                   })}
+
+                  {headings.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground text-sm rounded-xl border bg-muted/20">
+                      {isRTL ? "لا توجد أقسام محددة في المحتوى" : "No sections detected in content"}
+                    </div>
+                  )}
                 </div>
               )}
 
-              {selectedImages.length > 0 && (
+              {selectedCount > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-end"
+                  className="flex justify-end mt-6"
                 >
                   <Button
                     onClick={confirmImages}

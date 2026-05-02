@@ -44,6 +44,8 @@ router.get("/admin/stats", async (req, res) => {
         department: p.department,
         language: p.language,
         documentType: p.documentType ?? "word",
+        pageCount: p.pageCount ?? 20,
+        templateName: p.templateName ?? "default",
         status: p.status,
         generatedContent: p.generatedContent ?? null,
         selectedImages: (p.selectedImages as string[]) ?? null,

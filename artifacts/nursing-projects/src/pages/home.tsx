@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { Plus, Trash2, ChevronRight, ChevronLeft, GraduationCap, Users, FlaskConical, BookOpen, FileText, Presentation } from "lucide-react";
+import { Plus, Trash2, ChevronRight, ChevronLeft, GraduationCap, Users, FlaskConical, BookOpen, FileText, Presentation, Minus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -24,6 +24,8 @@ const formSchema = z.object({
   department: z.string().min(2),
   language: z.enum(["ar", "en"]),
   documentType: z.enum(["word", "pptx"]),
+  pageCount: z.number().int().min(5).max(300).default(20),
+  templateName: z.string().default("default"),
   universityLogoUrl: z.string().nullable().optional(),
   facultyLogoUrl: z.string().nullable().optional(),
 });
@@ -31,6 +33,18 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const STEPS = ["projectInfo", "logoUpload", "review"] as const;
+
+const WORD_TEMPLATES = [
+  { id: "word_1", labelKey: "templateWord1", color: "bg-blue-500", desc: "Classic academic layout" },
+  { id: "word_2", labelKey: "templateWord2", color: "bg-indigo-500", desc: "Modern clean style" },
+];
+
+const PPTX_TEMPLATES = [
+  { id: "classic", labelKey: "templateClassic", color: "bg-sky-600", desc: "Traditional blue style" },
+  { id: "dark", labelKey: "templateDark", color: "bg-slate-800", desc: "Professional dark theme" },
+  { id: "medical", labelKey: "templateMedical", color: "bg-emerald-600", desc: "Medical green theme" },
+  { id: "modern", labelKey: "templateModern", color: "bg-violet-600", desc: "Modern gradient style" },
+];
 
 export default function HomePage() {
   const { t, i18n } = useTranslation();
@@ -48,6 +62,8 @@ export default function HomePage() {
       department: "",
       language: i18n.language as "ar" | "en",
       documentType: "word" as "word" | "pptx",
+      pageCount: 20,
+      templateName: "word_1",
       universityLogoUrl: null,
       facultyLogoUrl: null,
     },
@@ -77,6 +93,8 @@ export default function HomePage() {
           department: values.department,
           language: values.language,
           documentType: values.documentType,
+          pageCount: values.pageCount,
+          templateName: values.templateName,
           universityLogoUrl: values.universityLogoUrl ?? null,
           facultyLogoUrl: values.facultyLogoUrl ?? null,
         },
@@ -97,6 +115,12 @@ export default function HomePage() {
   };
 
   const prevStep = () => setStep((s) => Math.max(s - 1, 0));
+
+  const docType = form.watch("documentType");
+  const templates = docType === "word" ? WORD_TEMPLATES : PPTX_TEMPLATES;
+  const pageUnit = isRTL
+    ? (docType === "word" ? t("pagesUnit") : t("slidesUnit"))
+    : (docType === "word" ? t("pagesUnit") : t("slidesUnit"));
 
   const features = [
     { icon: FlaskConical, label: isRTL ? "محتوى أكاديمي بالذكاء الاصطناعي" : "AI Academic Content" },
@@ -275,7 +299,11 @@ export default function HomePage() {
                               <button
                                 key={type}
                                 type="button"
-                                onClick={() => form.setValue("documentType", type)}
+                                onClick={() => {
+                                  form.setValue("documentType", type);
+                                  form.setValue("templateName", type === "word" ? "word_1" : "classic");
+                                  form.setValue("pageCount", type === "word" ? 20 : 15);
+                                }}
                                 data-testid={`btn-doctype-${type}`}
                                 className={cn(
                                   "flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 transition-all text-start",
@@ -303,6 +331,62 @@ export default function HomePage() {
                               </button>
                             );
                           })}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <Label>{t("templateSelect")}</Label>
+                        <div className={cn("grid gap-2", templates.length === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-4")}>
+                          {templates.map((tpl) => {
+                            const isSelected = form.watch("templateName") === tpl.id;
+                            return (
+                              <button
+                                key={tpl.id}
+                                type="button"
+                                onClick={() => form.setValue("templateName", tpl.id)}
+                                className={cn(
+                                  "relative rounded-xl border-2 overflow-hidden transition-all text-start",
+                                  isSelected ? "border-primary shadow-sm" : "border-border hover:border-primary/40"
+                                )}
+                              >
+                                <div className={cn("h-12 w-full", tpl.color)} />
+                                <div className="px-2.5 py-2">
+                                  <span className={cn("text-xs font-semibold block", isSelected ? "text-foreground" : "text-muted-foreground")}>
+                                    {t(tpl.labelKey)}
+                                  </span>
+                                </div>
+                                {isSelected && (
+                                  <div className="absolute top-1.5 end-1.5 h-4 w-4 rounded-full bg-primary flex items-center justify-center">
+                                    <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <Label>{t("pageCount")}</Label>
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => form.setValue("pageCount", Math.max(5, (form.getValues("pageCount") ?? 20) - 5))}
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border bg-muted hover:bg-muted/70 transition-colors"
+                          >
+                            <Minus className="h-3.5 w-3.5" />
+                          </button>
+                          <div className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border bg-muted/30 h-9 px-4">
+                            <span className="font-bold text-foreground text-base tabular-nums">{form.watch("pageCount") ?? 20}</span>
+                            <span className="text-xs text-muted-foreground">{pageUnit}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => form.setValue("pageCount", Math.min(300, (form.getValues("pageCount") ?? 20) + 5))}
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border bg-muted hover:bg-muted/70 transition-colors"
+                          >
+                            <Plus className="h-3.5 w-3.5" />
+                          </button>
                         </div>
                       </div>
                     </motion.div>
@@ -355,6 +439,8 @@ export default function HomePage() {
                           { label: t("department"), value: form.getValues("department") },
                           { label: t("language"), value: form.getValues("language") === "ar" ? t("arabic") : t("english") },
                           { label: t("documentType"), value: form.getValues("documentType") === "word" ? t("documentTypeWord") : t("documentTypePptx") },
+                          { label: t("templateSelect"), value: t(templates.find(t2 => t2.id === form.getValues("templateName"))?.labelKey ?? "templateWord1") },
+                          { label: t("pageCount"), value: `${form.getValues("pageCount")} ${pageUnit}` },
                         ].map(({ label, value }) => (
                           <div key={label} className="grid grid-cols-2 px-4 py-3 gap-2">
                             <span className="text-xs font-medium text-muted-foreground">{label}</span>

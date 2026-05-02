@@ -293,6 +293,12 @@ components:
         documentType:
           type: string
           enum: [word, pptx]
+        pageCount:
+          type: integer
+          nullable: true
+        templateName:
+          type: string
+          nullable: true
         status:
           type: string
           enum: [draft, generating, images_pending, payment_pending, pending_approval, approved, rejected, completed]
@@ -347,6 +353,12 @@ components:
         documentType:
           type: string
           enum: [word, pptx]
+        pageCount:
+          type: integer
+          nullable: true
+        templateName:
+          type: string
+          nullable: true
         universityLogoUrl:
           type: string
           nullable: true

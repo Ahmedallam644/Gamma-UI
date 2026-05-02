@@ -46,6 +46,8 @@ export interface Project {
   department: string;
   language: ProjectLanguage;
   documentType: ProjectDocumentType;
+  pageCount?: number | null;
+  templateName?: string | null;
   status: ProjectStatus;
   generatedContent?: string | null;
   selectedImages?: string[] | null;
@@ -82,6 +84,8 @@ export interface CreateProjectBody {
   department: string;
   language: CreateProjectBodyLanguage;
   documentType: CreateProjectBodyDocumentType;
+  pageCount?: number | null;
+  templateName?: string | null;
   universityLogoUrl?: string | null;
   facultyLogoUrl?: string | null;
 }

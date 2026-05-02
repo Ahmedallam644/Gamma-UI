@@ -38,6 +38,8 @@ export const ListProjectsResponse = zod.object({
       department: zod.string(),
       language: zod.enum(["ar", "en"]),
       documentType: zod.enum(["word", "pptx"]),
+      pageCount: zod.number().nullish(),
+      templateName: zod.string().nullish(),
       status: zod.enum([
         "draft",
         "generating",
@@ -73,6 +75,8 @@ export const CreateProjectBody = zod.object({
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
   documentType: zod.enum(["word", "pptx"]),
+  pageCount: zod.number().nullish(),
+  templateName: zod.string().nullish(),
   universityLogoUrl: zod.string().nullish(),
   facultyLogoUrl: zod.string().nullish(),
 });
@@ -92,6 +96,8 @@ export const GetProjectResponse = zod.object({
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
   documentType: zod.enum(["word", "pptx"]),
+  pageCount: zod.number().nullish(),
+  templateName: zod.string().nullish(),
   status: zod.enum([
     "draft",
     "generating",
@@ -145,6 +151,8 @@ export const SelectProjectImagesResponse = zod.object({
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
   documentType: zod.enum(["word", "pptx"]),
+  pageCount: zod.number().nullish(),
+  templateName: zod.string().nullish(),
   status: zod.enum([
     "draft",
     "generating",
@@ -186,6 +194,8 @@ export const UploadPaymentReceiptResponse = zod.object({
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
   documentType: zod.enum(["word", "pptx"]),
+  pageCount: zod.number().nullish(),
+  templateName: zod.string().nullish(),
   status: zod.enum([
     "draft",
     "generating",
@@ -223,6 +233,8 @@ export const ApproveProjectResponse = zod.object({
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
   documentType: zod.enum(["word", "pptx"]),
+  pageCount: zod.number().nullish(),
+  templateName: zod.string().nullish(),
   status: zod.enum([
     "draft",
     "generating",
@@ -264,6 +276,8 @@ export const RejectProjectResponse = zod.object({
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
   documentType: zod.enum(["word", "pptx"]),
+  pageCount: zod.number().nullish(),
+  templateName: zod.string().nullish(),
   status: zod.enum([
     "draft",
     "generating",
@@ -341,6 +355,8 @@ export const GetAdminStatsResponse = zod.object({
       department: zod.string(),
       language: zod.enum(["ar", "en"]),
       documentType: zod.enum(["word", "pptx"]),
+      pageCount: zod.number().nullish(),
+      templateName: zod.string().nullish(),
       status: zod.enum([
         "draft",
         "generating",
