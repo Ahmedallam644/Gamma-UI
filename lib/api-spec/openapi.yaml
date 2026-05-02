@@ -1,22 +1,26 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Nursing Academic Projects Generator API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: projects
+    description: Project generation and management
+  - name: media
+    description: Image search and upload
+  - name: admin
+    description: Admin operations
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +28,241 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List all project requests
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending_approval, approved, rejected, completed]
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectList"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Submit a new project request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectBody"
+      responses:
+        "201":
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a single project
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}/generate:
+    post:
+      operationId: generateProjectContent
+      tags: [projects]
+      summary: Start AI content generation (streams SSE)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: SSE stream of generated content
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /projects/{id}/select-images:
+    post:
+      operationId: selectProjectImages
+      tags: [projects]
+      summary: Save selected Pexels image URLs for a project
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SelectImagesBody"
+      responses:
+        "200":
+          description: Images saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}/upload-receipt:
+    post:
+      operationId: uploadPaymentReceipt
+      tags: [projects]
+      summary: Upload Vodafone Cash/InstaPay receipt image URL
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadReceiptBody"
+      responses:
+        "200":
+          description: Receipt uploaded, project pending approval
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}/approve:
+    post:
+      operationId: approveProject
+      tags: [admin]
+      summary: Admin approves a project and triggers document generation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Project approved and download links generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}/reject:
+    post:
+      operationId: rejectProject
+      tags: [admin]
+      summary: Admin rejects a project request
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RejectProjectBody"
+      responses:
+        "200":
+          description: Project rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /media/pexels-search:
+    get:
+      operationId: searchPexelsImages
+      tags: [media]
+      summary: Search Pexels for images
+      parameters:
+        - in: query
+          name: query
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 5
+      responses:
+        "200":
+          description: List of Pexels images
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PexelsSearchResult"
+
+  /media/upload-image:
+    post:
+      operationId: uploadImageToCloudinary
+      tags: [media]
+      summary: Upload a base64 image to Cloudinary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadImageBody"
+      responses:
+        "200":
+          description: Uploaded image URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadImageResult"
+
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Get admin dashboard statistics
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +270,183 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        topic:
+          type: string
+        studentNames:
+          type: array
+          items:
+            type: string
+        supervisorName:
+          type: string
+        department:
+          type: string
+        language:
+          type: string
+          enum: [ar, en]
+        status:
+          type: string
+          enum: [draft, generating, images_pending, payment_pending, pending_approval, approved, rejected, completed]
+        generatedContent:
+          type: string
+          nullable: true
+        selectedImages:
+          type: array
+          items:
+            type: string
+          nullable: true
+        receiptUrl:
+          type: string
+          nullable: true
+        universityLogoUrl:
+          type: string
+          nullable: true
+        facultyLogoUrl:
+          type: string
+          nullable: true
+        docxDownloadUrl:
+          type: string
+          nullable: true
+        pptxDownloadUrl:
+          type: string
+          nullable: true
+        rejectionReason:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required: [id, topic, studentNames, supervisorName, department, language, status, createdAt, updatedAt]
+
+    CreateProjectBody:
+      type: object
+      properties:
+        topic:
+          type: string
+        studentNames:
+          type: array
+          items:
+            type: string
+        supervisorName:
+          type: string
+        department:
+          type: string
+        language:
+          type: string
+          enum: [ar, en]
+        universityLogoUrl:
+          type: string
+          nullable: true
+        facultyLogoUrl:
+          type: string
+          nullable: true
+      required: [topic, studentNames, supervisorName, department, language]
+
+    SelectImagesBody:
+      type: object
+      properties:
+        imageUrls:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 5
+      required: [imageUrls]
+
+    UploadReceiptBody:
+      type: object
+      properties:
+        receiptUrl:
+          type: string
+      required: [receiptUrl]
+
+    RejectProjectBody:
+      type: object
+      properties:
+        reason:
+          type: string
+      required: [reason]
+
+    ProjectList:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+        total:
+          type: integer
+      required: [projects, total]
+
+    PexelsImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        photographer:
+          type: string
+        src:
+          type: object
+          properties:
+            medium:
+              type: string
+            large:
+              type: string
+          required: [medium, large]
+      required: [id, url, photographer, src]
+
+    PexelsSearchResult:
+      type: object
+      properties:
+        photos:
+          type: array
+          items:
+            $ref: "#/components/schemas/PexelsImage"
+        total_results:
+          type: integer
+      required: [photos, total_results]
+
+    UploadImageBody:
+      type: object
+      properties:
+        dataUri:
+          type: string
+        folder:
+          type: string
+          nullable: true
+      required: [dataUri]
+
+    UploadImageResult:
+      type: object
+      properties:
+        url:
+          type: string
+        publicId:
+          type: string
+      required: [url, publicId]
+
+    AdminStats:
+      type: object
+      properties:
+        totalProjects:
+          type: integer
+        pendingApproval:
+          type: integer
+        completed:
+          type: integer
+        rejected:
+          type: integer
+        recentProjects:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+      required: [totalProjects, pendingApproval, completed, rejected, recentProjects]
