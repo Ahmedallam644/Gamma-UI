@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { Plus, Trash2, ChevronRight, ChevronLeft, GraduationCap, Users, FlaskConical, BookOpen } from "lucide-react";
+import { Plus, Trash2, ChevronRight, ChevronLeft, GraduationCap, Users, FlaskConical, BookOpen, FileText, Presentation } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -22,6 +22,7 @@ const formSchema = z.object({
   supervisorName: z.string().min(2),
   department: z.string().min(2),
   language: z.enum(["ar", "en"]),
+  documentType: z.enum(["word", "pptx"]),
   universityLogoUrl: z.string().nullable().optional(),
   facultyLogoUrl: z.string().nullable().optional(),
 });
@@ -45,6 +46,7 @@ export default function HomePage() {
       supervisorName: "",
       department: "",
       language: i18n.language as "ar" | "en",
+      documentType: "word" as "word" | "pptx",
       universityLogoUrl: null,
       facultyLogoUrl: null,
     },
@@ -73,6 +75,7 @@ export default function HomePage() {
           supervisorName: values.supervisorName,
           department: values.department,
           language: values.language,
+          documentType: values.documentType,
           universityLogoUrl: values.universityLogoUrl ?? null,
           facultyLogoUrl: values.facultyLogoUrl ?? null,
         },
@@ -260,6 +263,46 @@ export default function HomePage() {
                           ))}
                         </div>
                       </div>
+
+                      <div className="flex flex-col gap-2">
+                        <Label>{t("documentType")}</Label>
+                        <div className="grid grid-cols-2 gap-3">
+                          {(["word", "pptx"] as const).map((type) => {
+                            const isSelected = form.watch("documentType") === type;
+                            return (
+                              <button
+                                key={type}
+                                type="button"
+                                onClick={() => form.setValue("documentType", type)}
+                                data-testid={`btn-doctype-${type}`}
+                                className={cn(
+                                  "flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 transition-all text-start",
+                                  isSelected
+                                    ? "border-primary bg-primary/5 shadow-sm"
+                                    : "border-border bg-muted/30 hover:border-primary/40 hover:bg-muted/50"
+                                )}
+                              >
+                                <div className={cn(
+                                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all",
+                                  isSelected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                                )}>
+                                  {type === "word"
+                                    ? <FileText className="h-4 w-4" />
+                                    : <Presentation className="h-4 w-4" />}
+                                </div>
+                                <div className="flex flex-col leading-tight">
+                                  <span className={cn("text-sm font-semibold", isSelected ? "text-foreground" : "text-muted-foreground")}>
+                                    {t(type === "word" ? "documentTypeWord" : "documentTypePptx")}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground/70">
+                                    {t(type === "word" ? "documentTypeWordDesc" : "documentTypePptxDesc")}
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </motion.div>
                   )}
 
@@ -309,6 +352,7 @@ export default function HomePage() {
                           { label: t("supervisorName"), value: form.getValues("supervisorName") },
                           { label: t("department"), value: form.getValues("department") },
                           { label: t("language"), value: form.getValues("language") === "ar" ? t("arabic") : t("english") },
+                          { label: t("documentType"), value: form.getValues("documentType") === "word" ? t("documentTypeWord") : t("documentTypePptx") },
                         ].map(({ label, value }) => (
                           <div key={label} className="grid grid-cols-2 px-4 py-3 gap-2">
                             <span className="text-xs font-medium text-muted-foreground">{label}</span>

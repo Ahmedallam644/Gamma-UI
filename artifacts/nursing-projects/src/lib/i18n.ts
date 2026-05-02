@@ -4,7 +4,7 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   ar: {
     translation: {
-      appName: "مولّد مشاريع التخرج",
+      appName: "بيان",
       appSubtitle: "أداة ذكاء اصطناعي متخصصة لطلاب كلية التمريض",
       newProject: "مشروع جديد",
       topic: "موضوع المشروع",
@@ -19,6 +19,11 @@ const resources = {
       language: "لغة المشروع",
       arabic: "العربية",
       english: "الإنجليزية",
+      documentType: "نوع الملف المطلوب",
+      documentTypeWord: "ملف Word",
+      documentTypeWordDesc: "مستند بحثي كامل",
+      documentTypePptx: "عرض PowerPoint",
+      documentTypePptxDesc: "شرائح احترافية",
       universityLogo: "شعار الجامعة",
       facultyLogo: "شعار الكلية",
       uploadLogo: "رفع الشعار",
@@ -85,7 +90,7 @@ const resources = {
   },
   en: {
     translation: {
-      appName: "Graduation Project Generator",
+      appName: "Bayan",
       appSubtitle: "AI-powered tool for Nursing College students",
       newProject: "New Project",
       topic: "Project Topic",
@@ -100,6 +105,11 @@ const resources = {
       language: "Project Language",
       arabic: "Arabic",
       english: "English",
+      documentType: "Output File Type",
+      documentTypeWord: "Word Document",
+      documentTypeWordDesc: "Full research document",
+      documentTypePptx: "PowerPoint Slides",
+      documentTypePptxDesc: "Professional presentation",
       universityLogo: "University Logo",
       facultyLogo: "Faculty Logo",
       uploadLogo: "Upload Logo",

@@ -9,6 +9,7 @@ export const projectsTable = pgTable("projects", {
   supervisorName: text("supervisor_name").notNull(),
   department: text("department").notNull(),
   language: text("language").notNull().default("ar"),
+  documentType: text("document_type").notNull().default("word"),
   status: text("status").notNull().default("draft"),
   generatedContent: text("generated_content"),
   selectedImages: jsonb("selected_images").$type<string[]>(),

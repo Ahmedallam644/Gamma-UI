@@ -17,6 +17,14 @@ export const ProjectLanguage = {
   en: "en",
 } as const;
 
+export type ProjectDocumentType =
+  (typeof ProjectDocumentType)[keyof typeof ProjectDocumentType];
+
+export const ProjectDocumentType = {
+  word: "word",
+  pptx: "pptx",
+} as const;
+
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];
 
 export const ProjectStatus = {
@@ -37,6 +45,7 @@ export interface Project {
   supervisorName: string;
   department: string;
   language: ProjectLanguage;
+  documentType: ProjectDocumentType;
   status: ProjectStatus;
   generatedContent?: string | null;
   selectedImages?: string[] | null;
@@ -58,12 +67,21 @@ export const CreateProjectBodyLanguage = {
   en: "en",
 } as const;
 
+export type CreateProjectBodyDocumentType =
+  (typeof CreateProjectBodyDocumentType)[keyof typeof CreateProjectBodyDocumentType];
+
+export const CreateProjectBodyDocumentType = {
+  word: "word",
+  pptx: "pptx",
+} as const;
+
 export interface CreateProjectBody {
   topic: string;
   studentNames: string[];
   supervisorName: string;
   department: string;
   language: CreateProjectBodyLanguage;
+  documentType: CreateProjectBodyDocumentType;
   universityLogoUrl?: string | null;
   facultyLogoUrl?: string | null;
 }

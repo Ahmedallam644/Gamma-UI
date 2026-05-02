@@ -138,7 +138,7 @@ export default function StatusPage() {
                 {isCompleted && (project.docxDownloadUrl || project.pptxDownloadUrl) && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 flex flex-col gap-3">
                     <div className="h-px bg-border" />
-                    {project.docxDownloadUrl && (
+                    {project.documentType === "word" && project.docxDownloadUrl && (
                       <a href={project.docxDownloadUrl} target="_blank" rel="noopener noreferrer">
                         <Button className="w-full gap-2" variant="default" data-testid="btn-download-docx">
                           <Download className="h-4 w-4" />
@@ -146,9 +146,9 @@ export default function StatusPage() {
                         </Button>
                       </a>
                     )}
-                    {project.pptxDownloadUrl && (
+                    {project.documentType === "pptx" && project.pptxDownloadUrl && (
                       <a href={project.pptxDownloadUrl} target="_blank" rel="noopener noreferrer">
-                        <Button className="w-full gap-2" variant="outline" data-testid="btn-download-pptx">
+                        <Button className="w-full gap-2" variant="default" data-testid="btn-download-pptx">
                           <Download className="h-4 w-4" />
                           {t("downloadPPT")}
                         </Button>

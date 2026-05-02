@@ -37,6 +37,7 @@ export const ListProjectsResponse = zod.object({
       supervisorName: zod.string(),
       department: zod.string(),
       language: zod.enum(["ar", "en"]),
+      documentType: zod.enum(["word", "pptx"]),
       status: zod.enum([
         "draft",
         "generating",
@@ -71,6 +72,7 @@ export const CreateProjectBody = zod.object({
   supervisorName: zod.string(),
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
+  documentType: zod.enum(["word", "pptx"]),
   universityLogoUrl: zod.string().nullish(),
   facultyLogoUrl: zod.string().nullish(),
 });
@@ -89,6 +91,7 @@ export const GetProjectResponse = zod.object({
   supervisorName: zod.string(),
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
+  documentType: zod.enum(["word", "pptx"]),
   status: zod.enum([
     "draft",
     "generating",
@@ -141,6 +144,7 @@ export const SelectProjectImagesResponse = zod.object({
   supervisorName: zod.string(),
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
+  documentType: zod.enum(["word", "pptx"]),
   status: zod.enum([
     "draft",
     "generating",
@@ -181,6 +185,7 @@ export const UploadPaymentReceiptResponse = zod.object({
   supervisorName: zod.string(),
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
+  documentType: zod.enum(["word", "pptx"]),
   status: zod.enum([
     "draft",
     "generating",
@@ -217,6 +222,7 @@ export const ApproveProjectResponse = zod.object({
   supervisorName: zod.string(),
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
+  documentType: zod.enum(["word", "pptx"]),
   status: zod.enum([
     "draft",
     "generating",
@@ -257,6 +263,7 @@ export const RejectProjectResponse = zod.object({
   supervisorName: zod.string(),
   department: zod.string(),
   language: zod.enum(["ar", "en"]),
+  documentType: zod.enum(["word", "pptx"]),
   status: zod.enum([
     "draft",
     "generating",
@@ -333,6 +340,7 @@ export const GetAdminStatsResponse = zod.object({
       supervisorName: zod.string(),
       department: zod.string(),
       language: zod.enum(["ar", "en"]),
+      documentType: zod.enum(["word", "pptx"]),
       status: zod.enum([
         "draft",
         "generating",

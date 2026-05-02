@@ -290,6 +290,9 @@ components:
         language:
           type: string
           enum: [ar, en]
+        documentType:
+          type: string
+          enum: [word, pptx]
         status:
           type: string
           enum: [draft, generating, images_pending, payment_pending, pending_approval, approved, rejected, completed]
@@ -323,7 +326,7 @@ components:
           type: string
         updatedAt:
           type: string
-      required: [id, topic, studentNames, supervisorName, department, language, status, createdAt, updatedAt]
+      required: [id, topic, studentNames, supervisorName, department, language, documentType, status, createdAt, updatedAt]
 
     CreateProjectBody:
       type: object
@@ -341,13 +344,16 @@ components:
         language:
           type: string
           enum: [ar, en]
+        documentType:
+          type: string
+          enum: [word, pptx]
         universityLogoUrl:
           type: string
           nullable: true
         facultyLogoUrl:
           type: string
           nullable: true
-      required: [topic, studentNames, supervisorName, department, language]
+      required: [topic, studentNames, supervisorName, department, language, documentType]
 
     SelectImagesBody:
       type: object
