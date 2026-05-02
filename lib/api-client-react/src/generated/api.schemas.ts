@@ -93,7 +93,7 @@ export interface CreateProjectBody {
 export interface SelectImagesBody {
   /**
    * @minItems 1
-   * @maxItems 5
+   * @maxItems 10
    */
   imageUrls: string[];
 }

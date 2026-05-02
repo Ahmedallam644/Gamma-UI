@@ -134,7 +134,7 @@ export const SelectProjectImagesParams = zod.object({
   id: zod.coerce.string(),
 });
 
-export const selectProjectImagesBodyImageUrlsMax = 5;
+export const selectProjectImagesBodyImageUrlsMax = 10;
 
 export const SelectProjectImagesBody = zod.object({
   imageUrls: zod

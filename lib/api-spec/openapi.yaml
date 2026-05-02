@@ -375,7 +375,7 @@ components:
           items:
             type: string
           minItems: 1
-          maxItems: 5
+          maxItems: 10
       required: [imageUrls]
 
     UploadReceiptBody:
