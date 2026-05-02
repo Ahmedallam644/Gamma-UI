@@ -1,0 +1,134 @@
+Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+googleads.g.doubleclick.net/pagead/viewthroughconversion/11411994397/?random=1777751223789&cv=11&fst=1777751223789&fmt=3&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be64t1v9171242957za200zd9171242957xec&gcd=13l3l3l3l1l1&dma=0&tag_exp=0~115616986~115938466~115938468~116363097&u_w=1920&u_h=1080&url=https%3A%2F%2Freplit.com%2F%40am25267723%2FGamma-UI-Frontend&rcb=15&frm=0&tiba=Loading...%20-%20Replit&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1469033087.1777735485&data=event%3Dgtag.config:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+0wavzx4wm.ylw.js:21 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+0wavzx4wm.ylw.js:21 Download the Apollo DevTools for a better development experience: https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=594624688&gjid=722469409&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=620301121:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+Gamma-UI-Frontend:1 Denying load of chrome-extension://icgjkfebljaiiccoeeihocdmjnojmeal/assets/pollyfill-1a6d9aea.js. Resources must be listed in the web_accessible_resources manifest key in order to be loaded by pages outside the extension.Understand this error
+Gamma-UI-Frontend:1 Denying load of chrome-extension://icgjkfebljaiiccoeeihocdmjnojmeal/assets/Setting-6bd6f942.js. Resources must be listed in the web_accessible_resources manifest key in order to be loaded by pages outside the extension.Understand this error
+chrome-extension://invalid/:1  Failed to load resource: net::ERR_FAILEDUnderstand this error
+TypeError: Failed to fetch dynamically imported module: chrome-extension://41a20979-d87f-4950-a0c9-5c5e69b2bcc4/assets/index.tsx-3a917141.jsUnderstand this error
+ Applying inline style violates the following Content Security Policy directive 'style-src 'self' 'sha256-0hAheEzaMe6uXIKV4EehS9pu1am1lj/KnnzrOYqckXk=''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Applying inline style violates the following Content Security Policy directive 'style-src 'self' 'sha256-0hAheEzaMe6uXIKV4EehS9pu1am1lj/KnnzrOYqckXk=''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+ Loading the script 'blob:https://js.stripe.com/768c8af3-3124-4514-be68-9bbbe4624890' violates the following Content Security Policy directive: "script-src 'self'". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Loading the script 'blob:https://js.stripe.com/768c8af3-3124-4514-be68-9bbbe4624890' violates the following Content Security Policy directive: "script-src 'self'". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+0wavzx4wm.ylw.js:21 [LaunchDarkly] LaunchDarkly client initialized
+ Applying inline style violates the following Content Security Policy directive 'style-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Applying inline style violates the following Content Security Policy directive 'style-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+ Applying inline style violates the following Content Security Policy directive 'style-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The policy is report-only, so the violation has been logged but no further action has been taken.
+content.js:13 Applying inline style violates the following Content Security Policy directive 'style-src 'self''. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The policy is report-only, so the violation has been logged but no further action has been taken.
+ Loading the script 'blob:https://js.stripe.com/151d3be7-4c07-4739-99ac-b7d4594e38fa' violates the following Content Security Policy directive: "script-src 'self'". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The policy is report-only, so the violation has been logged but no further action has been taken.
+content.js:13 Loading the script 'blob:https://js.stripe.com/151d3be7-4c07-4739-99ac-b7d4594e38fa' violates the following Content Security Policy directive: "script-src 'self'". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The policy is report-only, so the violation has been logged but no further action has been taken.
+ Loading the script 'blob:https://js.stripe.com/151d3be7-4c07-4739-99ac-b7d4594e38fa' violates the following Content Security Policy directive: "script-src 'self'". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Loading the script 'blob:https://js.stripe.com/151d3be7-4c07-4739-99ac-b7d4594e38fa' violates the following Content Security Policy directive: "script-src 'self'". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Applying inline style violates the following Content Security Policy directive 'style-src https://m.stripe.network'. Either the 'unsafe-inline' keyword, a hash ('sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+content.js:13 Loading the script 'blob:https://m.stripe.network/56094081-7666-4627-9683-34cea4bad16d' violates the following Content Security Policy directive: "script-src https://m.stripe.network 'sha256-e357n1PxCJ8d03/QCSKaHFmHF1JADyvSHdSfshxM494=' 'sha256-5DA+a07wxWmEka9IdoWjSPVHb17Cp5284/lJzfbl8KA=' 'sha256-/5Guo2nzv5n/w6ukZpOBZOtTJBJPSkJ6mhHpnBgm3Ls='". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked.
+(anonymous) @ content.js:13Understand this error
+q.stripe.com/csp-report:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+q.stripe.com/csp-report:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+Gamma-UI-Frontend:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1497258057&gjid=1445585363&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=975512926:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=136521074&gjid=1803493286&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=863245560:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=845951028&gjid=664222934&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1494988819:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1983073336&gjid=1132270505&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1372385325:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1772159352&gjid=1753119396&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1192930114:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+30wavzx4wm.ylw.js:21 Haven't heard from the server in a while, resetting connection...
+push.tz @ 0wavzx4wm.ylw.js:21Understand this warning
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=83187472&gjid=2146012338&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=208998900:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+0i8wy8tbht2ow.js:2 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+C @ 0i8wy8tbht2ow.js:2Understand this error
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'ambient-light-sensor'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'battery'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'execution-while-not-rendered'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'execution-while-out-of-viewport'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'layout-animations'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'legacy-image-formats'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'navigation-override'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'oversized-images'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'publickey-credentials'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'speaker-selection'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'unoptimized-images'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'unsized-media'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Unrecognized feature: 'pointer-lock'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Allow attribute will take precedence over 'allowfullscreen'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0i8wy8tbht2ow.js:2 Allow attribute will take precedence over 'allowpaymentrequest'.
+C @ 0i8wy8tbht2ow.js:2Understand this warning
+0j210tspwt3vr.js:9 Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev') does not match the recipient window's origin ('https://replit.com').
+w @ 0j210tspwt3vr.js:9Understand this warning
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1152366706&gjid=338115811&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=2096189716:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1488678878&gjid=397038266&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=688237812:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=652892359&gjid=653109630&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=10162335:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=376716847&gjid=1767380876&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=2017800766:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=39089687&gjid=301269191&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=2107967960:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=168439278&gjid=69991682&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1302758990:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=426761072&gjid=327855164&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=674278434:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1580282299&gjid=1901909037&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=428105510:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=468425529&gjid=996307724&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1913862067:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=802655218&gjid=543730337&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1403510742:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1750780911&gjid=6405114&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=2093815838:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=2084000996&gjid=879100770&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1611804039:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=2047517331&gjid=2070592306&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=1643686712:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1459019782&gjid=652390550&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=410244131:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+20wavzx4wm.ylw.js:21 Haven't heard from the server in a while, resetting connection...
+push.tz @ 0wavzx4wm.ylw.js:21Understand this warning
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=2130485478&gjid=2135997077&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=568537837:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+0wavzx4wm.ylw.js:21 Haven't heard from the server in a while, resetting connection...
+push.tz @ 0wavzx4wm.ylw.js:21Understand this warning
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=658539328&gjid=427294482&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=617351046:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+0i8wy8tbht2ow.js:2 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+C @ 0i8wy8tbht2ow.js:2Understand this error
+0j210tspwt3vr.js:9 Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev') does not match the recipient window's origin ('https://replit.com').
+w @ 0j210tspwt3vr.js:9Understand this warning
+stats.g.doubleclick.net/j/collect?t=dc&aip=1&_r=3&v=1&_v=j102&tid=UA-25629695-1&cid=1829467334.1777735485&jid=1076459858&gjid=531400194&_gid=1736180268.1777735485&_u=SCCAgEAjQAAAAGgCIAD~&z=64241019:1  Failed to load resource: net::ERR_BLOCKED_BY_CLIENTUnderstand this error
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.Understand this error
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'ambient-light-sensor'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'battery'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'execution-while-not-rendered'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'execution-while-out-of-viewport'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'layout-animations'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'legacy-image-formats'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'navigation-override'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'oversized-images'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'publickey-credentials'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'speaker-selection'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'unoptimized-images'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Unrecognized feature: 'unsized-media'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Allow attribute will take precedence over 'allowfullscreen'.Understand this warning
+95551b18-a036-41a7-b1ba-68440bee0373-00-12q6xptyam6dy.kirk.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=artifacts%2Fnursing-projects:32 Allow attribute will take precedence over 'allowpaymentrequest'.Understand this warning
+workspace_iframe.html?initialPath=%2Fgenerate%2F3&id=artifacts%2Fnursing-projects:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.Understand this error

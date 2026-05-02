@@ -18,24 +18,40 @@ const TEMPLATE_COLORS: Record<string, { primary: string; light: string; dark: st
 
 interface Section { heading: string | null; paragraphs: string[] }
 
-function parseContent(content: string, isArabic: boolean): Section[] {
-  const ARABIC_HEADS = /^(الفصل|المقدمة|الخاتمة|التوصيات|الأهداف|الإطار|المراجع|ملخص|الأساليب|الطرق|النتائج|المناقشة|أهمية|خلفية)/i;
-  const ENGLISH_HEADS = /^(Chapter|Introduction|Conclusion|Recommendations|Objectives|Framework|References|Summary|Abstract|Methods|Results|Discussion|Importance|Background)/i;
-  const MD_HEAD = /^#{1,3}\s+/;
+const AR_HEADS = /^(الفصل|المقدمة|الخاتمة|التوصيات|الأهداف|الإطار|المراجع|ملخص|الأساليب|الطرق|النتائج|المناقشة|أهمية|خلفية)/i;
+const EN_HEADS = /^(Chapter|Introduction|Conclusion|Recommendations|Objectives|Framework|References|Summary|Abstract|Methods|Results|Discussion|Importance|Background)/i;
 
-  const lines = content.split(/\n+/).map(l => l.trim()).filter(Boolean);
+function isHeadingText(text: string): boolean {
+  return (AR_HEADS.test(text) || EN_HEADS.test(text)) && text.length < 100;
+}
+
+function parseContent(content: string, _isArabic: boolean): Section[] {
+  const lines = content.split(/\n/).map(l => l.trim()).filter(Boolean);
   const sections: Section[] = [];
   let current: Section = { heading: null, paragraphs: [] };
 
   for (const line of lines) {
-    const clean = line.replace(/^\*+|\*+$/g, "").replace(/^#+\s*/, "").trim();
-    const isHead = (MD_HEAD.test(line) || (isArabic ? ARABIC_HEADS.test(clean) : ENGLISH_HEADS.test(clean))) && clean.length < 120;
+    let headingText: string | null = null;
 
-    if (isHead) {
+    if (/^#{1,3}\s+/.test(line)) {
+      headingText = line.replace(/^#+\s*/, "").replace(/\*+/g, "").replace(/:+$/, "").trim();
+    } else {
+      const boldMatch = line.match(/^\*\*([^*]{2,80})\*\*:?\s*/);
+      if (boldMatch) {
+        const inner = boldMatch[1].replace(/:+$/, "").trim();
+        if (isHeadingText(inner)) headingText = inner;
+      } else {
+        const plain = line.replace(/^\*+|\*+$/g, "").replace(/:+$/, "").trim();
+        if (isHeadingText(plain) && plain.length < 80) headingText = plain;
+      }
+    }
+
+    if (headingText) {
       if (current.heading !== null || current.paragraphs.length > 0) sections.push(current);
-      current = { heading: clean, paragraphs: [] };
-    } else if (clean.length > 0) {
-      current.paragraphs.push(clean);
+      current = { heading: headingText, paragraphs: [] };
+    } else {
+      const bodyText = line.replace(/\*\*/g, "").replace(/^#+\s*/, "").trim();
+      if (bodyText) current.paragraphs.push(bodyText);
     }
   }
   if (current.heading !== null || current.paragraphs.length > 0) sections.push(current);
@@ -176,7 +192,7 @@ async function buildWordDocument({ opts, colors, sections, imageBuffers, uniLogo
       borders: { top: { style: BorderStyle.NONE, size: 0, color: "auto" }, bottom: { style: BorderStyle.NONE, size: 0, color: "auto" }, left: { style: BorderStyle.NONE, size: 0, color: "auto" }, right: { style: BorderStyle.NONE, size: 0, color: "auto" } },
       children: [new Paragraph({
         alignment: AlignmentType.CENTER,
-        children: [new TextRun({ text: isArabic ? "مشروع تخرج" : "Graduation Project", color: "FFFFFF", bold: true, size: 32, font: isArabic ? "Amiri" : "Calibri" })],
+        children: [new TextRun({ text: isArabic ? (opts.documentType === "pptx" ? "عرض تقديمي" : "بحث علمي") : (opts.documentType === "pptx" ? "Academic Presentation" : "Research Paper"), color: "FFFFFF", bold: true, size: 32, font: isArabic ? "Amiri" : "Calibri" })],
       })],
     })],
   });

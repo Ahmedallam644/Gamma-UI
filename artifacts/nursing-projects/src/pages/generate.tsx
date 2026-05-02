@@ -22,37 +22,48 @@ interface PexelsResult {
   total_results: number;
 }
 
+const AR_HEAD = /^(الفصل|المقدمة|الخاتمة|التوصيات|الأهداف|الإطار|المراجع|ملخص|الأساليب|الطرق|النتائج|المناقشة|أهمية|خلفية)/i;
+const EN_HEAD = /^(Chapter|Introduction|Conclusion|Recommendations|Objectives|Framework|References|Summary|Abstract|Methods|Results|Discussion|Importance|Background)/i;
+
 function extractHeadings(content: string): string[] {
-  const lines = content.split("\n");
   const headings: string[] = [];
   const seen = new Set<string>();
 
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.length > 100) continue;
+  const addHeading = (raw: string) => {
+    const h = raw.replace(/\*+/g, "").replace(/:+$/, "").trim();
+    if (h && h.length < 100 && !seen.has(h)) {
+      seen.add(h);
+      headings.push(h);
+    }
+  };
 
-    let heading = "";
+  for (const line of content.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
 
     if (/^#{1,3}\s+/.test(trimmed)) {
-      heading = trimmed.replace(/^#+\s*/, "").replace(/\*+/g, "").trim();
-    } else if (
-      /^(الفصل|المقدمة|الخاتمة|التوصيات|الأهداف|الإطار|المراجع|ملخص|الأساليب|الطرق|النتائج|المناقشة)/i.test(trimmed) &&
-      trimmed.length < 80
-    ) {
-      heading = trimmed.replace(/^\*+|\*+$/g, "").trim();
-    } else if (
-      /^(Chapter|Introduction|Conclusion|Recommendations|Objectives|Framework|References|Summary|Methods|Results|Discussion)/i.test(trimmed) &&
-      trimmed.length < 80
-    ) {
-      heading = trimmed.replace(/^\*+|\*+$/g, "").trim();
+      addHeading(trimmed.replace(/^#+\s*/, ""));
+    } else {
+      const boldMatch = trimmed.match(/^\*\*([^*]{2,80})\*\*:?/);
+      if (boldMatch) {
+        const inner = boldMatch[1].trim();
+        if (AR_HEAD.test(inner) || EN_HEAD.test(inner)) addHeading(inner);
+      } else if ((AR_HEAD.test(trimmed) || EN_HEAD.test(trimmed)) && trimmed.length < 90) {
+        addHeading(trimmed);
+      }
     }
 
-    if (heading && !seen.has(heading)) {
-      seen.add(heading);
-      headings.push(heading);
-    }
+    if (headings.length >= 6) break;
+  }
 
-    if (headings.length >= 5) break;
+  if (headings.length === 0) {
+    for (const m of content.matchAll(/\*\*([^*\n]{3,80})\*\*:?/g)) {
+      const inner = m[1].trim();
+      if ((AR_HEAD.test(inner) || EN_HEAD.test(inner)) && inner.length < 80) {
+        addHeading(inner);
+      }
+      if (headings.length >= 6) break;
+    }
   }
 
   return headings;
