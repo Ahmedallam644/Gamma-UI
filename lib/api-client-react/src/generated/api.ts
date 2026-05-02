@@ -25,6 +25,7 @@ import type {
   Project,
   ProjectList,
   RejectProjectBody,
+  SaveOutlineBody,
   SearchPexelsImagesParams,
   SelectImagesBody,
   UploadImageBody,
@@ -382,6 +383,177 @@ export function useGetProject<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Start AI outline generation (streams SSE)
+ */
+export const getGenerateProjectOutlineUrl = (id: string) => {
+  return `/api/projects/${id}/generate-outline`;
+};
+
+export const generateProjectOutline = async (
+  id: string,
+  options?: RequestInit,
+): Promise<string> => {
+  return customFetch<string>(getGenerateProjectOutlineUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getGenerateProjectOutlineMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateProjectOutline>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof generateProjectOutline>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["generateProjectOutline"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof generateProjectOutline>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return generateProjectOutline(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GenerateProjectOutlineMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generateProjectOutline>>
+>;
+
+export type GenerateProjectOutlineMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Start AI outline generation (streams SSE)
+ */
+export const useGenerateProjectOutline = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateProjectOutline>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof generateProjectOutline>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getGenerateProjectOutlineMutationOptions(options));
+};
+
+/**
+ * @summary Save the approved project outline
+ */
+export const getSaveProjectOutlineUrl = (id: string) => {
+  return `/api/projects/${id}/save-outline`;
+};
+
+export const saveProjectOutline = async (
+  id: string,
+  saveOutlineBody: SaveOutlineBody,
+  options?: RequestInit,
+): Promise<Project> => {
+  return customFetch<Project>(getSaveProjectOutlineUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(saveOutlineBody),
+  });
+};
+
+export const getSaveProjectOutlineMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof saveProjectOutline>>,
+    TError,
+    { id: string; data: BodyType<SaveOutlineBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof saveProjectOutline>>,
+  TError,
+  { id: string; data: BodyType<SaveOutlineBody> },
+  TContext
+> => {
+  const mutationKey = ["saveProjectOutline"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof saveProjectOutline>>,
+    { id: string; data: BodyType<SaveOutlineBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return saveProjectOutline(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SaveProjectOutlineMutationResult = NonNullable<
+  Awaited<ReturnType<typeof saveProjectOutline>>
+>;
+export type SaveProjectOutlineMutationBody = BodyType<SaveOutlineBody>;
+export type SaveProjectOutlineMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Save the approved project outline
+ */
+export const useSaveProjectOutline = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof saveProjectOutline>>,
+    TError,
+    { id: string; data: BodyType<SaveOutlineBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof saveProjectOutline>>,
+  TError,
+  { id: string; data: BodyType<SaveOutlineBody> },
+  TContext
+> => {
+  return useMutation(getSaveProjectOutlineMutationOptions(options));
+};
 
 /**
  * @summary Start AI content generation (streams SSE)

@@ -59,6 +59,7 @@ export const ListProjectsResponse = zod.object({
       docxDownloadUrl: zod.string().nullish(),
       pptxDownloadUrl: zod.string().nullish(),
       rejectionReason: zod.string().nullish(),
+      outline: zod.string().nullish(),
       createdAt: zod.string(),
       updatedAt: zod.string(),
     }),
@@ -118,6 +119,58 @@ export const GetProjectResponse = zod.object({
   docxDownloadUrl: zod.string().nullish(),
   pptxDownloadUrl: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  outline: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Start AI outline generation (streams SSE)
+ */
+export const GenerateProjectOutlineParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+/**
+ * @summary Save the approved project outline
+ */
+export const SaveProjectOutlineParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const SaveProjectOutlineBody = zod.object({
+  outline: zod.string(),
+});
+
+export const SaveProjectOutlineResponse = zod.object({
+  id: zod.string(),
+  topic: zod.string(),
+  studentNames: zod.array(zod.string()),
+  supervisorName: zod.string(),
+  department: zod.string(),
+  language: zod.enum(["ar", "en"]),
+  documentType: zod.enum(["word", "pptx"]),
+  pageCount: zod.number().nullish(),
+  templateName: zod.string().nullish(),
+  status: zod.enum([
+    "draft",
+    "generating",
+    "images_pending",
+    "payment_pending",
+    "pending_approval",
+    "approved",
+    "rejected",
+    "completed",
+  ]),
+  generatedContent: zod.string().nullish(),
+  selectedImages: zod.array(zod.string()).nullish(),
+  receiptUrl: zod.string().nullish(),
+  universityLogoUrl: zod.string().nullish(),
+  facultyLogoUrl: zod.string().nullish(),
+  docxDownloadUrl: zod.string().nullish(),
+  pptxDownloadUrl: zod.string().nullish(),
+  rejectionReason: zod.string().nullish(),
+  outline: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -173,6 +226,7 @@ export const SelectProjectImagesResponse = zod.object({
   docxDownloadUrl: zod.string().nullish(),
   pptxDownloadUrl: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  outline: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -216,6 +270,7 @@ export const UploadPaymentReceiptResponse = zod.object({
   docxDownloadUrl: zod.string().nullish(),
   pptxDownloadUrl: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  outline: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -255,6 +310,7 @@ export const ApproveProjectResponse = zod.object({
   docxDownloadUrl: zod.string().nullish(),
   pptxDownloadUrl: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  outline: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -298,6 +354,7 @@ export const RejectProjectResponse = zod.object({
   docxDownloadUrl: zod.string().nullish(),
   pptxDownloadUrl: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  outline: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -377,6 +434,7 @@ export const GetAdminStatsResponse = zod.object({
       docxDownloadUrl: zod.string().nullish(),
       pptxDownloadUrl: zod.string().nullish(),
       rejectionReason: zod.string().nullish(),
+      outline: zod.string().nullish(),
       createdAt: zod.string(),
       updatedAt: zod.string(),
     }),

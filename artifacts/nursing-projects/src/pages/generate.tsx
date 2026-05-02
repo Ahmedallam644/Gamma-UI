@@ -7,7 +7,7 @@ import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { Layout, StatusBadge } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, ImageIcon, Loader2, Sparkles, ChevronRight } from "lucide-react";
+import { CheckCircle2, ImageIcon, Loader2, Sparkles, ChevronRight, ListChecks, ClipboardPaste, Wand2, Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface PexelsPhoto {
@@ -84,6 +84,7 @@ export default function GeneratePage() {
   const queryClient = useQueryClient();
   const isRTL = i18n.language === "ar";
 
+  // Content generation state
   const [streamedSentences, setStreamedSentences] = useState<string[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamDone, setStreamDone] = useState(false);
@@ -91,6 +92,14 @@ export default function GeneratePage() {
   const [hasStarted, setHasStarted] = useState(false);
   const bufferRef = useRef("");
   const endRef = useRef<HTMLDivElement>(null);
+
+  // Outline step state
+  const [outlineMode, setOutlineMode] = useState<"ai" | "paste">("ai");
+  const [outlineText, setOutlineText] = useState("");
+  const [isStreamingOutline, setIsStreamingOutline] = useState(false);
+  const [outlineStreamDone, setOutlineStreamDone] = useState(false);
+  const [hasStartedOutline, setHasStartedOutline] = useState(false);
+  const [approvingOutline, setApprovingOutline] = useState(false);
 
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -101,6 +110,11 @@ export default function GeneratePage() {
       refetchInterval: streamDone ? 5000 : false,
     },
   });
+
+  // Derived: is this project in the "outline needed" state?
+  const projectOutline = (project as (typeof project & { outline?: string | null }))?.outline;
+  const needsOutline = project?.status === "draft" && !projectOutline;
+  const outlineApproved = project?.status === "draft" && !!projectOutline;
 
   const content = project?.generatedContent ?? "";
   const headings = streamDone && content ? extractHeadings(content) : [];
@@ -120,6 +134,76 @@ export default function GeneratePage() {
     return text.split(/(?<=[.!?؟\n])\s+/).filter(Boolean);
   };
 
+  // ── Outline streaming ────────────────────────────────────────────────────
+  const streamOutline = useCallback(async () => {
+    if (hasStartedOutline || !id) return;
+    setHasStartedOutline(true);
+    setIsStreamingOutline(true);
+    let text = "";
+
+    try {
+      const response = await fetch(`${base}/api/projects/${id}/generate-outline`, { method: "POST" });
+      if (!response.body) throw new Error("No stream");
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let rawBuffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        rawBuffer += decoder.decode(value, { stream: true });
+        const lines = rawBuffer.split("\n");
+        rawBuffer = lines.pop() ?? "";
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const data = line.slice(6).trim();
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.done) {
+              setOutlineStreamDone(true);
+              setIsStreamingOutline(false);
+              break;
+            }
+            if (parsed.error) {
+              toast({ title: t("errorOccurred"), description: parsed.error, variant: "destructive" });
+              setIsStreamingOutline(false);
+              break;
+            }
+            if (parsed.text) {
+              text += parsed.text;
+              setOutlineText(text);
+            }
+          } catch {}
+        }
+      }
+      setOutlineStreamDone(true);
+      setIsStreamingOutline(false);
+    } catch {
+      setIsStreamingOutline(false);
+      toast({ title: t("errorOccurred"), variant: "destructive" });
+    }
+  }, [id, hasStartedOutline, base, t, toast]);
+
+  const approveOutline = async () => {
+    if (!id || !outlineText.trim()) return;
+    setApprovingOutline(true);
+    try {
+      await fetch(`${base}/api/projects/${id}/save-outline`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ outline: outlineText }),
+      });
+      await queryClient.invalidateQueries({ queryKey: getGetProjectQueryKey(id) });
+      // Immediately start content generation
+      startStream();
+    } catch {
+      toast({ title: t("errorOccurred"), variant: "destructive" });
+    } finally {
+      setApprovingOutline(false);
+    }
+  };
+
+  // ── Content streaming ────────────────────────────────────────────────────
   const startStream = useCallback(async () => {
     if (hasStarted || !id) return;
     setHasStarted(true);
@@ -182,7 +266,8 @@ export default function GeneratePage() {
 
   useEffect(() => {
     if (project && !hasStarted) {
-      if (project.status === "draft") {
+      if (project.status === "draft" && outlineApproved) {
+        // Outline already saved (e.g., user refreshed) — go straight to content
         startStream();
       } else if (["images_pending", "payment_pending", "pending_approval", "completed"].includes(project.status)) {
         setStreamDone(true);
@@ -191,11 +276,11 @@ export default function GeneratePage() {
         }
       }
     }
-  }, [project, hasStarted, startStream]);
+  }, [project, hasStarted, startStream, outlineApproved]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [streamedSentences]);
+  }, [streamedSentences, outlineText]);
 
   const toggleImage = (sectionKey: string, url: string) => {
     setSelectedImages((prev) => {
@@ -225,6 +310,173 @@ export default function GeneratePage() {
   const allSectionsLoaded = sectionQueries.length > 0 && sectionQueries.every((q) => !q.isLoading);
   const anySectionLoading = sectionQueries.some((q) => q.isLoading);
 
+  // ── Outline step UI ──────────────────────────────────────────────────────
+  if (needsOutline) {
+    return (
+      <Layout>
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+              <ListChecks className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="font-bold text-lg text-foreground">
+                {isRTL ? "مخطط البحث" : "Research Outline"}
+              </h1>
+              {project && <p className="text-sm text-muted-foreground truncate max-w-xs">{project.topic}</p>}
+            </div>
+            {project && <div className="ms-auto"><StatusBadge status={project.status} /></div>}
+          </div>
+
+          <p className="text-sm text-muted-foreground mb-5">
+            {isRTL
+              ? "قبل توليد المحتوى الكامل، راجع المخطط وعدّله أو الصق مخططك الخاص — هذا يضمن أن النتائج تطابق ما تريد بالضبط."
+              : "Before generating the full content, review the outline and edit it or paste your own — this ensures the output matches exactly what you need."}
+          </p>
+
+          {/* Mode tabs */}
+          <div className="flex rounded-xl border bg-muted/50 p-1 gap-1 mb-5 w-fit">
+            <button
+              type="button"
+              onClick={() => setOutlineMode("ai")}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all",
+                outlineMode === "ai" ? "bg-card shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <Wand2 className="h-3.5 w-3.5" />
+              {isRTL ? "توليد بالذكاء الاصطناعي" : "Generate with AI"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setOutlineMode("paste")}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all",
+                outlineMode === "paste" ? "bg-card shadow text-foreground" : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <ClipboardPaste className="h-3.5 w-3.5" />
+              {isRTL ? "الصق مخططك الخاص" : "Paste your own"}
+            </button>
+          </div>
+
+          {/* AI mode */}
+          {outlineMode === "ai" && (
+            <div className="flex flex-col gap-4">
+              {!hasStartedOutline && (
+                <Button onClick={streamOutline} className="w-fit gap-2">
+                  <Sparkles className="h-4 w-4" />
+                  {isRTL ? "إنشاء مخطط بالذكاء الاصطناعي" : "Generate Outline with AI"}
+                </Button>
+              )}
+
+              {(isStreamingOutline || outlineText) && (
+                <div className="rounded-2xl border bg-card shadow-sm overflow-hidden">
+                  <div className="border-b px-5 py-3 bg-muted/30 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-3 w-3 rounded-full bg-red-400/70" />
+                      <div className="h-3 w-3 rounded-full bg-yellow-400/70" />
+                      <div className="h-3 w-3 rounded-full bg-green-400/70" />
+                      <span className="text-xs text-muted-foreground ms-2">
+                        {isRTL ? "مخطط البحث" : "Research Outline"}
+                      </span>
+                    </div>
+                    {outlineStreamDone && (
+                      <div className="flex items-center gap-1.5 text-xs text-emerald-600">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        {isRTL ? "اكتمل" : "Done"}
+                      </div>
+                    )}
+                  </div>
+                  <textarea
+                    value={outlineText}
+                    onChange={(e) => setOutlineText(e.target.value)}
+                    disabled={isStreamingOutline}
+                    dir={isRTL ? "rtl" : "ltr"}
+                    className={cn(
+                      "w-full p-5 min-h-72 text-sm leading-relaxed bg-transparent resize-none outline-none",
+                      isRTL ? "font-['Amiri',serif] text-base" : "font-mono",
+                      isStreamingOutline && "opacity-80"
+                    )}
+                    placeholder={isRTL ? "جاري إنشاء المخطط..." : "Generating outline..."}
+                  />
+                  {isStreamingOutline && (
+                    <div className="px-5 pb-3 flex items-center gap-2 text-xs text-muted-foreground">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      {isRTL ? "جاري التوليد..." : "Generating..."}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {outlineStreamDone && outlineText && (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground rounded-xl border bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 px-4 py-3">
+                  <Pencil className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+                  {isRTL
+                    ? "يمكنك تعديل المخطط مباشرة في الحقل أعلاه قبل الموافقة"
+                    : "You can edit the outline directly in the field above before approving"}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Paste mode */}
+          {outlineMode === "paste" && (
+            <div className="rounded-2xl border bg-card shadow-sm overflow-hidden">
+              <div className="border-b px-5 py-3 bg-muted/30 flex items-center gap-2">
+                <div className="h-3 w-3 rounded-full bg-red-400/70" />
+                <div className="h-3 w-3 rounded-full bg-yellow-400/70" />
+                <div className="h-3 w-3 rounded-full bg-green-400/70" />
+                <span className="text-xs text-muted-foreground ms-2">
+                  {isRTL ? "مخططك الخاص" : "Your Outline"}
+                </span>
+              </div>
+              <textarea
+                value={outlineText}
+                onChange={(e) => setOutlineText(e.target.value)}
+                dir={isRTL ? "rtl" : "ltr"}
+                className={cn(
+                  "w-full p-5 min-h-72 text-sm leading-relaxed bg-transparent resize-none outline-none",
+                  isRTL ? "font-['Amiri',serif] text-base" : "font-mono"
+                )}
+                placeholder={
+                  isRTL
+                    ? "الصق أو اكتب مخطط البحث هنا...\nمثال:\n**المقدمة:**\n- تعريف الموضوع\n- أهمية البحث\n\n**الأهداف:**\n- هدف 1\n- هدف 2"
+                    : "Paste or type your research outline here...\nExample:\n**Introduction:**\n- Topic definition\n- Research importance\n\n**Objectives:**\n- Objective 1\n- Objective 2"
+                }
+              />
+            </div>
+          )}
+
+          {/* Approve button */}
+          {outlineText.trim() && !isStreamingOutline && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex justify-end mt-4"
+            >
+              <Button
+                onClick={approveOutline}
+                disabled={approvingOutline}
+                className="gap-2"
+              >
+                {approvingOutline ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4" />
+                )}
+                {isRTL ? "اعتماد المخطط وبدء التوليد" : "Approve Outline & Generate Content"}
+                <ChevronRight className={cn("h-4 w-4", isRTL && "rotate-180")} />
+              </Button>
+            </motion.div>
+          )}
+          <div ref={endRef} />
+        </div>
+      </Layout>
+    );
+  }
+
+  // ── Content streaming + image selection UI ───────────────────────────────
   return (
     <Layout>
       <div className="max-w-4xl mx-auto">

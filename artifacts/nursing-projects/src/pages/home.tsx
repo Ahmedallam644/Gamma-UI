@@ -47,6 +47,22 @@ const PPTX_TEMPLATES = [
   { id: "modern", labelKey: "templateModern", color: "bg-violet-600", desc: "Modern gradient style" },
 ];
 
+function svgBadge(abbr: string, bg: string, text: string) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" rx="14" fill="${bg}"/><text x="40" y="32" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${abbr}</text><text x="40" y="54" font-family="Arial,sans-serif" font-size="7" fill="rgba(255,255,255,0.85)" text-anchor="middle" dominant-baseline="middle">${text}</text></svg>`;
+  return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+}
+
+const PRESET_LOGOS = [
+  { id: "ksu", label: "King Saud Univ.", labelAr: "جامعة الملك سعود", url: svgBadge("KSU", "#006633", "King Saud") },
+  { id: "kau", label: "King Abdulaziz Univ.", labelAr: "جامعة الملك عبدالعزيز", url: svgBadge("KAU", "#004080", "K. Abdulaziz") },
+  { id: "pnu", label: "Princess Nourah Univ.", labelAr: "جامعة الأميرة نورة", url: svgBadge("PNU", "#800040", "P. Nourah") },
+  { id: "kfu", label: "King Faisal Univ.", labelAr: "جامعة الملك فيصل", url: svgBadge("KFU", "#1a5276", "K. Faisal") },
+  { id: "uqu", label: "Umm Al-Qura Univ.", labelAr: "جامعة أم القرى", url: svgBadge("UQU", "#6e2c00", "Umm Al-Qura") },
+  { id: "iau", label: "Imam Abdulrahman Univ.", labelAr: "جامعة الإمام عبدالرحمن", url: svgBadge("IAU", "#1b4332", "Imam Abdul.") },
+  { id: "tu", label: "Taif University", labelAr: "جامعة الطائف", url: svgBadge("TU", "#2c3e8c", "Taif Univ.") },
+  { id: "kku", label: "King Khalid Univ.", labelAr: "جامعة الملك خالد", url: svgBadge("KKU", "#4a235a", "K. Khalid") },
+];
+
 export default function HomePage() {
   const { t, i18n } = useTranslation();
   const [, setLocation] = useLocation();
@@ -406,21 +422,64 @@ export default function HomePage() {
                     >
                       <p className="text-sm text-muted-foreground">
                         {isRTL
-                          ? "ارفع شعار جامعتك وكليتك لإضافتهما تلقائياً على غلاف المشروع (اختياري)"
-                          : "Upload your university and faculty logos to automatically add them to the project cover (optional)"}
+                          ? "اختر شعاراً جاهزاً أو ارفع شعارك الخاص لإضافته على غلاف المشروع (اختياري)"
+                          : "Pick a preset logo or upload your own to add to the project cover (optional)"}
                       </p>
-                      <LogoUpload
-                        label={t("universityLogo")}
-                        value={form.watch("universityLogoUrl")}
-                        onChange={(url) => form.setValue("universityLogoUrl", url)}
-                        data-testid="upload-university-logo"
-                      />
-                      <LogoUpload
-                        label={t("facultyLogo")}
-                        value={form.watch("facultyLogoUrl")}
-                        onChange={(url) => form.setValue("facultyLogoUrl", url)}
-                        data-testid="upload-faculty-logo"
-                      />
+
+                      {/* Preset logos section */}
+                      {(["universityLogoUrl", "facultyLogoUrl"] as const).map((field) => {
+                        const label = field === "universityLogoUrl" ? t("universityLogo") : t("facultyLogo");
+                        const current = form.watch(field);
+                        return (
+                          <div key={field} className="flex flex-col gap-2.5">
+                            <span className="text-sm font-medium text-foreground">{label}</span>
+                            <div className="grid grid-cols-4 gap-2">
+                              {PRESET_LOGOS.map((logo) => {
+                                const isSelected = current === logo.url;
+                                return (
+                                  <button
+                                    key={logo.id}
+                                    type="button"
+                                    onClick={() => form.setValue(field, isSelected ? null : logo.url)}
+                                    title={logo.label}
+                                    className={cn(
+                                      "flex flex-col items-center gap-1.5 rounded-xl border-2 p-2 transition-all",
+                                      isSelected
+                                        ? "border-primary bg-primary/5 shadow-sm"
+                                        : "border-border hover:border-primary/40 bg-muted/30"
+                                    )}
+                                  >
+                                    <img
+                                      src={logo.url}
+                                      alt={logo.label}
+                                      className="h-10 w-10 rounded-lg object-contain"
+                                    />
+                                    <span className={cn(
+                                      "text-[10px] font-medium text-center leading-tight truncate w-full",
+                                      isSelected ? "text-primary" : "text-muted-foreground"
+                                    )}>
+                                      {isRTL ? logo.labelAr : logo.label}
+                                    </span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <div className="relative flex items-center gap-3">
+                              <div className="flex-1 border-t" />
+                              <span className="text-xs text-muted-foreground">
+                                {isRTL ? "أو ارفع شعارك الخاص" : "or upload your own"}
+                              </span>
+                              <div className="flex-1 border-t" />
+                            </div>
+                            <LogoUpload
+                              label=""
+                              value={current}
+                              onChange={(url) => form.setValue(field, url)}
+                              data-testid={`upload-${field}`}
+                            />
+                          </div>
+                        );
+                      })}
                     </motion.div>
                   )}
 

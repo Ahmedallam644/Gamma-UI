@@ -98,6 +98,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/Project"
 
+  /projects/{id}/generate-outline:
+    post:
+      operationId: generateProjectOutline
+      tags: [projects]
+      summary: Start AI outline generation (streams SSE)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: SSE stream of outline text
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /projects/{id}/save-outline:
+    patch:
+      operationId: saveProjectOutline
+      tags: [projects]
+      summary: Save the approved project outline
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveOutlineBody"
+      responses:
+        "200":
+          description: Outline saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
   /projects/{id}/generate:
     post:
       operationId: generateProjectContent
@@ -332,6 +376,9 @@ components:
         rejectionReason:
           type: string
           nullable: true
+        outline:
+          type: string
+          nullable: true
         createdAt:
           type: string
         updatedAt:
@@ -373,6 +420,13 @@ components:
           type: string
           nullable: true
       required: [topic, studentNames, supervisorName, department, language, documentType]
+
+    SaveOutlineBody:
+      type: object
+      properties:
+        outline:
+          type: string
+      required: [outline]
 
     SelectImagesBody:
       type: object

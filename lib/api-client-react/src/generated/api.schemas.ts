@@ -57,6 +57,7 @@ export interface Project {
   docxDownloadUrl?: string | null;
   pptxDownloadUrl?: string | null;
   rejectionReason?: string | null;
+  outline?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -89,6 +90,10 @@ export interface CreateProjectBody {
   universityLogoUrl?: string | null;
   facultyLogoUrl?: string | null;
   studentId?: string | null;
+}
+
+export interface SaveOutlineBody {
+  outline: string;
 }
 
 export interface SelectImagesBody {
